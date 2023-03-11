@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View, ScrollView} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import CustomInput from '../../components/CustomInput'
@@ -6,7 +6,7 @@ import CustomButton from '../../components/CustomButton'
 import SocialSignButtons from '../../components/SocialSignButtons'
 import { EMAIL_REGEX } from '../../components/Regex/Regex'
 import {useForm} from 'react-hook-form'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
 
 
 const auth = getAuth();
@@ -17,25 +17,34 @@ const SignUpScreen = () => {
   const navigation = useNavigation();
   const {control, handleSubmit, formState: {errors}, watch} = useForm();
   const password = watch('password')
+  const {error, setError } = useState('');
 
   // Firebase Authentication methods
   const onRegisterPressed = async (data) => {
     console.log(data);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-      console.log(userCredential.user);
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password)
+      .then(() => {
+        console.log(userCredential);
+        sendEmailVerification(auth.currentUser);
+        updateProfile(auth.currentUser, {
+          displayName: data.username
+        })
+        console.log("Email verification link has been sent")
+      })
+      .catch(error => {
+        alert(error)
+      }); 
+    
+    navigation.navigate('SignIn');
 
-    // Assign the displayName to the user
-    await updateProfile(auth.currentUser, {
-      displayName: data.username,
-      photoURL: 'assets/logo.png',
-    });
-
-    navigation.navigate('Home');
-
-    } catch (error) {
-      console.error(error);
-      // handle the error here
+    } catch (err) {
+      if(err.code === 'auth/email-already-in-use'){
+        console.log('Registration failed: Email already in use')
+      } else{
+        console.log(err.message)
+      }
+        
     }
   };
    
@@ -96,6 +105,7 @@ const SignUpScreen = () => {
           rules={{validate: value => value === password || 'Password does not match',required: "Confirm password is required", minLength: {value: 6, message: "Confirm password should be minimum of 6 characters long."}}}
           
         />
+        <Text>{error}</Text>
         <CustomButton 
           text="Register"
           onPress={handleSubmit(onRegisterPressed)}       

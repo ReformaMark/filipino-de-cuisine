@@ -20,10 +20,12 @@ const SignInScreen = () => {
   
   const onSigninPressed = async (data) => {
     try {
-      await signInWithEmailAndPassword( auth ,data.email, data.password);
+      
+      await signInWithEmailAndPassword( auth ,data.email, data.password)
+      
       navigation.navigate('Home');
     } catch (error) {
-      setError(error.message);
+      setError(error);
     }
   };
   const onForgotPasswordPressed =  () =>{
