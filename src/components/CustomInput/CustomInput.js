@@ -13,7 +13,7 @@ const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type
         rules={rules}
         render={({field: {value, onChange, onBlur}, fieldState:{error}}) => (
           <>
-            <View style={[styles.container, {borderColor: error ? 'red' : '#e8e8e8'}]}>
+            <View style={[styles.container, {borderColor: error ? 'red' : '#dea02c'}]}>
               <Icon 
                   type={type}
                   name={iconName}
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     },
     input: {
      width: '100%',
+     borderColor:'#dea02c',
     }
   })
 

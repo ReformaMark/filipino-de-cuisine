@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, ScrollView ,useWindowDimensions } from 'react-native'
 import React,{useState} from 'react'
-import Logo from '../../../assets/logo.png'
+import Image from ''
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignButtons from '../../components/SocialSignButtons'
@@ -43,7 +43,7 @@ const SignInScreen = () => {
       <View style={styles.root}>        
         {/*Logo*/}
         <Image 
-          source={Logo} 
+          source={Image} 
           style={[styles.logo, {height: height * 0.2}]} 
           resizeMode="contain" 
         />

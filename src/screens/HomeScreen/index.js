@@ -4,6 +4,7 @@ import { useAuthentication } from '../../hooks/useAuthentication';
 import { Button } from 'react-native-elements';
 import { getAuth, signOut } from "firebase/auth";
 import { app } from '../../../config/firebaseConfig'
+
 export default function HomeScreen({ navigation }) {
 
   const { user } = useAuthentication();
@@ -38,7 +39,7 @@ export default function HomeScreen({ navigation }) {
             <Button
               title="Sign In"
               buttonStyle={styles.button}
-              onPress={() => navigation.navigate('SignIn')}
+              onPress={() => navigation.navigate('SignInSignUp')}
             />
             <Button
               title="Sign Up"
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
   },
   buttons: {
     marginTop: 20,
