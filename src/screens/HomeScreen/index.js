@@ -23,8 +23,8 @@ export default function HomeScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      {user ? (
+   /*<View style={styles.container}>
+       {user ? (
         <View style={styles.userInfo}>
           <Text>Welcome back, {user.displayName}!</Text>
             <Button 
@@ -49,8 +49,9 @@ export default function HomeScreen({ navigation }) {
             />
           </View>
         </>
-      )}
-    </View>
+      )} 
+    </View>*/
+    <></>
   );
 }
 
