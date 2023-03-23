@@ -4,7 +4,7 @@ import { Icon } from '@rneui/base';
 import { colors } from '../../global/styles';
 import {Controller} from 'react-hook-form';
 
-const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type, iconName}) => {
+const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type, iconName, keyboardType}) => {
 
   return (
       <Controller 
@@ -27,6 +27,7 @@ const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type
                 placeholder={placeholder}
                 style={styles.input}
                 secureTextEntry = {secureTextEntry}
+                keyboardType={keyboardType}
               />
             </View>
             {error && (<Text style={{color: 'red', alignSelf: 'stretch'}}>{error.message || 'Error'}</Text>)}

@@ -1,6 +1,7 @@
 import React from 'react'
 import CustomButton from '../CustomButton/CustomButton'
-
+import { Text, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 
 const SocialSignButtons = () => {
     
@@ -14,11 +15,13 @@ const SocialSignButtons = () => {
         console.warn("You pressed the Apple")
       }
   return (
-    <>
+    <View style={styles.container}>
+      <Text style={styles.text}>Or</Text>
        <CustomButton 
-       iconType='ant-design'
-       color='red'
-       name='google'
+        style={styles.socialButton}
+        iconType='ant-design'
+        color='red'
+        name='google'
         text="Sign In with Google"
         onPress={onSigninToGoogle}
         bgColor="#FAE9EA"
@@ -26,6 +29,7 @@ const SocialSignButtons = () => {
         type='SOCIAL'
       />
       <CustomButton 
+        style={styles.socialButton}
         iconType='entypo'
         color='blue'
         name='facebook-with-circle'
@@ -35,18 +39,19 @@ const SocialSignButtons = () => {
         fgColor="#4765A9"
         type='SOCIAL'
       />
-      <CustomButton 
-        iconType='ant-design'
-        color='black'
-        name='apple1'
-        text="Sign In with Apple"
-        onPress={onSignInApple}
-        bgColor="#e3e3e3"
-        fgColor="#363636"
-        type='SOCIAL'
-      />
-    </>
+    </View>
   )
 }
+
+const styles = StyleSheet.create({
+  text:{
+    marginVertical: 10,
+    textAlign: 'center',
+    fontWeight: 500,
+  },
+  container:{
+    paddingHorizontal: 20,
+  },
+})
 
 export default SocialSignButtons

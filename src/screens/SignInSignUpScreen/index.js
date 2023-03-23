@@ -10,9 +10,13 @@ import { useForm } from 'react-hook-form'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { CheckBox } from '@rneui/themed'
 
+
+
 export default function SignInSignUp () {
+    const auth = getAuth();
+    const navigation = useNavigation();
     const { width } = useWindowDimensions();
-    const {control, handleSubmit, formState: {errors}} = useForm();
+    const {control, handleSubmit,setError, formState: {errors}} = useForm();
     const [login, setLogin] = useState(true)
     const [signup, setSignup] = useState(false)
     const [activeText, setActiveText] = useState('login');
@@ -26,6 +30,30 @@ export default function SignInSignUp () {
             setActiveText('signup');
         }
     },[login, signup])
+
+    const onLoginPressed = async (data) => {
+    
+      try {
+        
+        const user = await signInWithEmailAndPassword( auth ,data.email, data.password)
+        console.log(user)
+
+      } catch (error) {
+        if (error.code === 'auth/user-not-found') {
+          setError('email',{
+            type: error.code,
+            message: "User not found"
+          })
+        } else if (error.code === 'auth/wrong-password') {
+          setError('password',{
+            type: error.code,
+            message: "Incorect password"
+          })
+        } else {
+          setError(error.message);
+        }
+      }
+    };
 
 
   return (
@@ -75,80 +103,86 @@ export default function SignInSignUp () {
                 minLength: {value: 6, message: "Password should be minimum of 6 characters long."}
               }}
               secureTextEntry={true} 
-            />
-            <View style={{flexDirection: 'row',}}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <CheckBox
-                    center
-                    title="Remember me"
-                    checked={check1}
-                    onPress={() => setCheck1(!check1)}
-                    wrapperStyle='none'
-                />
-                </View>
+            />           
             <View>
-                    <CustomButton           
-                        text="Forgot Password?"
-                        onPress={()=>{}}
-                        type="TERTIARY"
-                    />
-                </View>
+              <CustomButton           
+                  text="Forgot Password?"
+                  onPress={handleSubmit(onLoginPressed)}
+                  type="TERTIARY"
+              />
             </View>
+          
             <CustomButton 
             text="Login"
-            onPress={handleSubmit(()=>{})}       
+            onPress={handleSubmit(onLoginPressed)}       
             />
           </View>
         }
         {signup &&
         <View style={styles.container}>
-        <Text>Username</Text>
+          <Text>Username</Text>
             <CustomInput
             name='username'
             control={control}
             placeholder="Username" 
             rules={{
                 required: "Username is required", 
-                minLength: {value: 6, message: "Username should be minimum of 6 characters long."}}}
+                minLength: {value: 6, message: "Username should be minimum of 6 characters long."}
+              }}
             />
-        <Text>Email</Text>
+          <Text>Email</Text>
             <CustomInput     
             name='email'
             control={control}         
             placeholder="Email"
             rules={{
                 required:"Email is required" ,
-                pattern:{value:EMAIL_REGEX , message: 'Email is invalid'}}}
+                pattern:{value:EMAIL_REGEX , message: 'Email is invalid'}
+              }}
             />
-        <Text>Phone number</Text> 
+          <Text>Phone number</Text> 
             <CustomInput 
             name='phoneNumber'
             control={control}     
             placeholder="Phone number"
-            secureTextEntry={true} 
-            rules={{validate: value => value === password || 'Password does not match',required: "Confirm password is required", minLength: {value: 6, message: "Confirm password should be minimum of 6 characters long."}}}
-            
+            keyboardType='numeric'
+            rules={{
+              required: "Confirm password is required", 
+              minLength: {value: 11, message: "Please enter a valid phone number."}
+            }}            
             />
-        <Text>Password</Text>
+          <Text>Password</Text>
             <CustomInput 
             name='password'
             control={control}        
             placeholder="Password"
             secureTextEntry={true} 
-            rules={{required: "Password is required", minLength: {value: 6, message: "Password should be minimum of 6 characters long."}}}
+            rules={{
+              required: "Password is required", 
+              minLength: {value: 6, message: "Password should be minimum of 6 characters long."}
+            }}
             />
-        <Text>Confirm password</Text>
+          <Text>Confirm password</Text>
             <CustomInput 
             name='confirmPassword'
             control={control}     
             placeholder="Confirm password"
             secureTextEntry={true} 
-            rules={{validate: value => value === password || 'Password does not match',required: "Confirm password is required", minLength: {value: 6, message: "Confirm password should be minimum of 6 characters long."}}}
-
+            rules={{
+              validate: value => value === password || 'Password does not match',
+              required: "Confirm password is required", 
+              minLength: {value: 6, message: "Confirm password should be minimum of 6 characters long."}
+            }}
             />
-            
+          <View style={styles.signupBtn}>
+            <CustomButton 
+                text="Sign Up"
+                onPress={handleSubmit(()=>{})}      
+            />
+          </View> 
         </View>
         }
+        <SocialSignButtons/>
     </View>
     </ScrollView>
   )
@@ -189,5 +223,8 @@ const styles = StyleSheet.create({
       container: {
         width: '100%',
         paddingHorizontal: 20,
-      }
+      },
+      signupBtn: {
+        marginTop: 30,
+      },
 })

@@ -2,16 +2,34 @@ import { View, Text, StyleSheet, Pressable } from 'react-native'
 import React from 'react'
 import { colors, parameter } from '../../global/styles'
 import { Icon } from '@rneui/themed'
+import { androidRipple } from '@rneui/base'
+import { useState } from 'react'
 
 const CustomButton = ({onPress, text, type="PRIMARY", bgColor, fgColor, size, name, iconType, color}) => {
+    const [isPressed, setIsPressed] = useState(false);
+
+    const handlePressIn = () => setIsPressed(true);
+    const handlePressOut = () => setIsPressed(false);
+  
+    const buttonStyle = isPressed ? styles.buttonPressed : styles.button;
   return (
     <Pressable 
         onPress={onPress} 
-        style={[
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={(pressed) => [
             styles.container, 
             styles[`container_${type}`],
-            bgColor ? {backgroundColor: bgColor} : {}
-    ]}>
+            bgColor ? {backgroundColor: bgColor} : {},
+            
+                buttonStyle,
+                {
+                    opacity: pressed? 1 : 0.5,
+                },
+                
+        ]}
+        androidRipple={{color: '#DDDDDD'}}
+    >
     <Icon
         style={styles.icon}
         name={name}
@@ -55,7 +73,7 @@ const styles = StyleSheet.create({
     },
     container_SOCIAL:{
         width: '100%',
-        padding: 5,
+        padding: 10,
         paddingLeft: 20,
         marginVertical: 10,
         flexDirection: 'row',
@@ -78,7 +96,12 @@ const styles = StyleSheet.create({
     },
     icon:{
        
-    }
+    },
+    buttonPressed: {
+        backgroundColor: 'rgba(192,192,192, 0.2)',
+        borderRadius: 5,
+   
+      },
 })
 
 export default CustomButton

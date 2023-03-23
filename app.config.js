@@ -1,8 +1,8 @@
 import 'dotenv/config'
 export default {
   "expo": {
-    "name": "food-de-cuisine",
-    "slug": "food-de-cuisine",
+    "name": "filipino-de-cuisine",
+    "slug": "filipino-de-cuisine",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
