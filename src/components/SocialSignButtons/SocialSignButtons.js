@@ -17,28 +17,29 @@ const SocialSignButtons = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Or</Text>
+      <CustomButton 
+        style={styles.socialButton}
+        iconType='fontAwesome'
+        color='#FFFFFF'
+        name='facebook'
+        text="Sign In with Facebook"
+        onPress={onSigninToFacebook}
+        bgColor="#3B5998"
+        fgColor="#FFFFFF"
+        type='SOCIAL'
+      />
        <CustomButton 
         style={styles.socialButton}
         iconType='ant-design'
-        color='red'
+        color='#FFFFFF'
         name='google'
         text="Sign In with Google"
         onPress={onSigninToGoogle}
-        bgColor="#FAE9EA"
-        fgColor="#DD4D44"
+        bgColor="#EA4335"
+        fgColor="#FFFFFF"
         type='SOCIAL'
       />
-      <CustomButton 
-        style={styles.socialButton}
-        iconType='entypo'
-        color='blue'
-        name='facebook-with-circle'
-        text="Sign In with Facebook"
-        onPress={onSigninToFacebook}
-        bgColor="#E7EAF4"
-        fgColor="#4765A9"
-        type='SOCIAL'
-      />
+      
     </View>
   )
 }

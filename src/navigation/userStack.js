@@ -1,10 +1,11 @@
 import React from 'react';
-import { NavigationContainer, DefaultTheme  } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, useNavigation  } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen/index'
 import ProfileScreen from '../screens/ProfileScreen'
+
 import CartScreen from '../screens/CartScreen';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -17,19 +18,31 @@ const MyTheme = {
       primary: 'rgb(255, 45, 85)',
     },
   };
-function HomeStack() {
+
+const HomeStack = createStackNavigator()
+function HomeStackScreen() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false,  }} >
-      <Stack.Screen name="Home" component={HomeScreen} />
-    </Stack.Navigator>
+    <HomeStack.Navigator screenOptions={{ headerShown: false,  }} >
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+    </HomeStack.Navigator>
+  );
+}
+const MenuStack = createStackNavigator()
+function MenuStackScreen (){
+  return (
+    <MenuStack.Navigator>
+      <MenuStack.Screen name="Menu" component={MenuScreen} />
+    </MenuStack.Navigator>
   );
 }
 
-function ProfileStack() {
+
+const ProfileStack = createStackNavigator()
+function ProfileStackScreen() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Profile" component={ProfileScreen} />
-    </Stack.Navigator>
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+    </ProfileStack.Navigator>
   );
 }
 
@@ -67,10 +80,10 @@ function ProfileStack() {
         tabBarHideOnKeyboard={true}
         
       >
-        <Tab.Screen name="Home" component={HomeStack} />
-        <Tab.Screen name="Menu" component={ProfileStack} />
-        <Tab.Screen name="Reservation" component={ProfileStack} />
-        <Tab.Screen name="Account" component={ProfileStack} />
+        <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="Menu" component={MenuStackScreen} />
+        <Tab.Screen name="Reservation" component={ProfileStackScreen} />
+        <Tab.Screen name="Account" component={ProfileStackScreen} />
         
       </Tab.Navigator>
 
@@ -81,15 +94,19 @@ export default function MainStackNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="MainTab" component={MainTabNavigator} options={{ headerShown: false}} />
+        <Stack.Screen 
+          name="MainTab" 
+          component={MainTabNavigator}
+          options={{ headerShown: false}} 
+        />
         <Stack.Screen
-        name="Cart"
-        component={CartScreen}
-        options={{
-          headerShown: true,
-          title: 'Cart'
-        }}
-      />
+          name="Cart"
+          component={CartScreen}
+          options={{
+            headerShown: true,
+            title: 'Cart'
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
