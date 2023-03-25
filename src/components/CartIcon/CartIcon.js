@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CartIcon() {
+  const navigation = useNavigation()
   const [cartItemsCount, setCartItemsCount] = useState(1);
 
   const handleAddToCart = (item) => {
@@ -19,6 +21,7 @@ export default function CartIcon() {
         size={35}
         onPress={() => {
           // navigate to cart screen
+          navigation.navigate('Cart')
         }}
       />
       {cartItemsCount > 0 && (

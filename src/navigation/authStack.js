@@ -10,7 +10,7 @@ export default function AuthStack() {
     return (
       <NavigationContainer>
         <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="SignInUp"
         screenOptions={{
           headerShown: false
         }}
