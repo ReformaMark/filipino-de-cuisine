@@ -132,7 +132,7 @@ export default function SignInSignUp () {
             />
           <Text>Email</Text>
             <CustomInput     
-            name='email'
+            name='signupEmail'
             control={control}         
             placeholder="Email"
             rules={{
@@ -153,7 +153,7 @@ export default function SignInSignUp () {
             />
           <Text>Password</Text>
             <CustomInput 
-            name='password'
+            name='SignUpPassword'
             control={control}        
             placeholder="Password"
             secureTextEntry={true} 
@@ -169,7 +169,7 @@ export default function SignInSignUp () {
             placeholder="Confirm password"
             secureTextEntry={true} 
             rules={{
-              validate: value => value === password || 'Password does not match',
+              validate: value => value === SignupPassword || 'Password does not match',
               required: "Confirm password is required", 
               minLength: {value: 6, message: "Confirm password should be minimum of 6 characters long."}
             }}

@@ -64,59 +64,68 @@ const SignUpScreen = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
-    
-        <Text style={styles.title}>Create an account</Text>
-
-        <CustomInput
-          name='username'
-          control={control}
-          type="feather" 
-          iconName="user"
-          placeholder="Username" 
-          rules={{
-            required: "Username is required", 
-            minLength: {value: 6, message: "Username should be minimum of 6 characters long."}}}
-        />
-        <CustomInput     
-          name='email'
-          control={control}    
-          iconName="email"        
-          placeholder="Email"
-          rules={{
-            required:"Email is required" ,
-            pattern:{value:EMAIL_REGEX , message: 'Email is invalid'}}}
-        />
-        <CustomInput 
-          name='password'
-          control={control}
-          type="feather" 
-          iconName="lock"          
-          placeholder="Password"
-          secureTextEntry={true} 
-          rules={{required: "Password is required", minLength: {value: 6, message: "Password should be minimum of 6 characters long."}}}
-        />
-        <CustomInput 
-          name='confirmPassword'
-          control={control}
-          type='material-community'
-          iconName="form-textbox-password"      
-          placeholder="Confirm password"
-          secureTextEntry={true} 
-          rules={{validate: value => value === password || 'Password does not match',required: "Confirm password is required", minLength: {value: 6, message: "Confirm password should be minimum of 6 characters long."}}}
-          
-        />
-        <Text>{error}</Text>
-        <CustomButton 
-          text="Register"
-          onPress={handleSubmit(onRegisterPressed)}       
-        />
-        <Text style={styles.text}>By registering, you confirm that you accept our <Text style={styles.link} onPress={onTermsOfUsePressed}>Terms of use</Text> and <Text style={styles.link} onPress={onPrivacyPressed}>Privacy Policy</Text></Text>
-        <SocialSignButtons />
-        <CustomButton 
-          text="Have an account? Sign In"
-          onPress={onSignInPressed}
-          type="TERTIARY"
-        />
+      <View style={styles.container}>
+          <Text>Username</Text>
+            <CustomInput
+            name='username'
+            control={control}
+            placeholder="Username" 
+            rules={{
+                required: "Username is required", 
+                minLength: {value: 6, message: "Username should be minimum of 6 characters long."}
+              }}
+            />
+          <Text>Email</Text>
+            <CustomInput     
+            name='signupEmail'
+            control={control}         
+            placeholder="Email"
+            rules={{
+                required:"Email is required" ,
+                pattern:{value:EMAIL_REGEX , message: 'Email is invalid'}
+              }}
+            />
+          <Text>Phone number</Text> 
+            <CustomInput 
+            name='phoneNumber'
+            control={control}     
+            placeholder="Phone number"
+            keyboardType='numeric'
+            rules={{
+              required: "Confirm password is required", 
+              minLength: {value: 11, message: "Please enter a valid phone number."}
+            }}            
+            />
+          <Text>Password</Text>
+            <CustomInput 
+            name='SignUpPassword'
+            control={control}        
+            placeholder="Password"
+            secureTextEntry={true} 
+            rules={{
+              required: "Password is required", 
+              minLength: {value: 6, message: "Password should be minimum of 6 characters long."}
+            }}
+            />
+          <Text>Confirm password</Text>
+            <CustomInput 
+            name='confirmPassword'
+            control={control}     
+            placeholder="Confirm password"
+            secureTextEntry={true} 
+            rules={{
+              validate: value => value === SignupPassword || 'Password does not match',
+              required: "Confirm password is required", 
+              minLength: {value: 6, message: "Confirm password should be minimum of 6 characters long."}
+            }}
+            />
+          <View style={styles.signupBtn}>
+            <CustomButton 
+                text="Sign Up"
+                onPress={handleSubmit(()=>{})}      
+            />
+          </View> 
+        </View>
       </View>
     </ScrollView>
   )

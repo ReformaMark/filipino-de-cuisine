@@ -21,15 +21,6 @@ function HomeStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false,  }} >
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen
-        name="Cart"
-        component={CartScreen}
-        options={{
-          headerShown: false,
-          presentation: 'modal',
-          title: 'Cart'
-        }}
-      />
     </Stack.Navigator>
   );
 }
@@ -89,10 +80,17 @@ function ProfileStack() {
 export default function MainStackNavigator() {
   return (
     <NavigationContainer>
-    <Stack.Navigator>
-      <Stack.Screen name="MainTab" component={MainTabNavigator} options={{ headerShown: false}} />
-      <Stack.Screen name="Cart" component={CartScreen} options={{}} />
-    </Stack.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen name="MainTab" component={MainTabNavigator} options={{ headerShown: false}} />
+        <Stack.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          headerShown: true,
+          title: 'Cart'
+        }}
+      />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
