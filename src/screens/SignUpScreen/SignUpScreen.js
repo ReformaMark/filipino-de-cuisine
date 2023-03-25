@@ -64,7 +64,7 @@ const SignUpScreen = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
-      <View style={styles.container}>
+        <View style={styles.container}>
           <Text>Username</Text>
             <CustomInput
             name='username'
@@ -126,7 +126,10 @@ const SignUpScreen = () => {
             />
           </View> 
         </View>
+
+        
       </View>
+      <SocialSignButtons />
     </ScrollView>
   )
 }
