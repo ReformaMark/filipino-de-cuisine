@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import { EMAIL_REGEX } from '../../components/Regex/Regex'
 import { useForm } from 'react-hook-form'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { app } from '../../../config/firebaseConfig'
+
 
 const auth = getAuth();
 const SignInScreen = () => {
@@ -17,12 +17,10 @@ const SignInScreen = () => {
   const [error, setError] = useState('');
 
   
-  const onLoginPressed = async (data) => {
-    
-    try {
-      
+  const onLoginPressed = async (data) => {    
+    try {      
       const user = await signInWithEmailAndPassword( auth ,data.email, data.password)
-      console.log(user)
+      
 
     } catch (error) {
       if (error.code === 'auth/user-not-found') {
