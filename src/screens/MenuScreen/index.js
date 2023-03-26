@@ -9,6 +9,6 @@ const MenuScreen = () => {
   )
 }
 
-export default index
+export default MenuScreen
 
 const styles = StyleSheet.create({})

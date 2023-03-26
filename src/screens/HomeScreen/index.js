@@ -4,15 +4,15 @@ import { useAuthentication } from '../../hooks/useAuthentication';
 import { getAuth, signOut } from "firebase/auth";
 import { app } from '../../../config/firebaseConfig'
 import { useForm } from 'react-hook-form'
+
 import CartIcon from '../../components/CartIcon';
 import CustomButton  from '../../components/CustomButton'
 import CustomInput  from '../../components/CustomInput'
-import backgroundImage from './images/bgHome.png'
-import logo from './images/logo.png'
 import dinakdakan from './images/dinakdakan.png'
 import karekare from './images/karekare.png'
 import halohalo from './images/halohalo.png'
 import minatamis from './images/minatamis.png'
+import Logo from '../../components/Logo';
 
 export default function HomeScreen({ navigation }) {
   const {width} = useWindowDimensions();
@@ -23,7 +23,6 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>  
-    <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.searchAndIconContainer}>
         <View style={[styles.searchContainer , {width: width * 0.7}]}>
           <CustomInput 
@@ -35,13 +34,7 @@ export default function HomeScreen({ navigation }) {
         </View>
         <CartIcon/>
       </View>
-      <View style={styles.logoContainer}>
-        <Image 
-          source={logo} 
-          style={styles.logo} 
-          resizeMode="contain" 
-        />    
-      </View>
+      <Logo/>
 
       <View style={styles.container}>
         <Text style={styles.popular}>Most Popular Foods</Text>
@@ -96,8 +89,7 @@ export default function HomeScreen({ navigation }) {
           onPress={()=>{}}       
         />
       </View>
-     
-    </ImageBackground>  
+ 
     </ScrollView>
   );
 }
@@ -109,20 +101,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     marginTop: 50,
     marginBottom: 20,
-  },
-  background: {
-    flex: 1,
-    resizeMode: 'cover', // or 'cover'
-  },
-  logoContainer:{
-    alignItems:'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(245,255,250,0.5)',
-  },
-  logo: {
-   width: 300,
-   height: 100,
-   maxHeight: 200,
   },
   btnContainer:{
     paddingHorizontal: 30,

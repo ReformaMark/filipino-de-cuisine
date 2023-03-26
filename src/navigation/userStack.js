@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen/index'
 import ProfileScreen from '../screens/ProfileScreen'
+import MenuScreen from '../screens/MenuScreen/index'
 
 import CartScreen from '../screens/CartScreen';
 import { useIsFocused } from '@react-navigation/native';
@@ -48,16 +49,12 @@ function ProfileStackScreen() {
 
 
  function MainTabNavigator() {
-  const isCartScreenFocused = useIsFocused();
-  console.log(isCartScreenFocused)
-  return (
-    
+  return (    
       <Tab.Navigator 
         screenOptions={({ route }) => ({
           headerShown: false,        
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            
+            let iconName;            
             if (route.name === 'Home') {
               iconName = 'home';
               return <MaterialIcons name={iconName} size={size} color={color} />;
@@ -72,19 +69,14 @@ function ProfileStackScreen() {
               return <MaterialIcons name={iconName} size={size} color={color} />;
             }
           },
-
           tabBarActiveTintColor: '#FBBC05',
           tabBarInactiveTintColor: 'black',
-        })}
-        tabBarStyle={{ display: isCartScreenFocused ? 'none' : 'flex' }}
-        tabBarHideOnKeyboard={true}
-        
+        })}        
       >
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Menu" component={MenuStackScreen} />
         <Tab.Screen name="Reservation" component={ProfileStackScreen} />
-        <Tab.Screen name="Account" component={ProfileStackScreen} />
-        
+        <Tab.Screen name="Account" component={ProfileStackScreen} />        
       </Tab.Navigator>
 
   );
