@@ -19,7 +19,6 @@ export function useAuthentication() {
           sendEmailVerification(user)
           console.log("Email verification link has been sent")
         }
-        console.log(user)
       } else {
         // User is signed out
         setUser(undefined);

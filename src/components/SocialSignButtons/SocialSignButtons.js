@@ -51,8 +51,9 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
   container:{
-    paddingHorizontal: 20,
+    
   },
+  
 })
 
 export default SocialSignButtons

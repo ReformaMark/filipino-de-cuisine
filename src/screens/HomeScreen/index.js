@@ -16,10 +16,10 @@ import Logo from '../../components/Logo';
 
 export default function HomeScreen({ navigation }) {
   const {width} = useWindowDimensions();
-  const { user } = useAuthentication();
-  const auth = getAuth(app)
+ 
   const {control, handleSubmit,setError, formState: {errors}} = useForm();
 
+  
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>  

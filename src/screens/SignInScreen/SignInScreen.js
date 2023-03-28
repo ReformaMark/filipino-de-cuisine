@@ -1,5 +1,5 @@
-import { View, Text, Image, StyleSheet, ScrollView ,useWindowDimensions } from 'react-native'
-import React,{useState} from 'react'
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator,Dimensions } from 'react-native'
+import React,{ useState} from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignButtons from '../../components/SocialSignButtons'
@@ -8,33 +8,37 @@ import { EMAIL_REGEX } from '../../components/Regex/Regex'
 import { useForm } from 'react-hook-form'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
-
 const auth = getAuth();
 const SignInScreen = () => {
-  const {height} = useWindowDimensions();
   const navigation = useNavigation();
-  const {control, handleSubmit, formState: {errors}} = useForm();
-  const [error, setError] = useState('');
-
+  const {control, handleSubmit,setError, formState: {errors}} = useForm();
+  const [loading, setLoading ] = useState(false);
   
-  const onLoginPressed = async (data) => {    
+  const onLoginPressed = async (data) => {  
+    setLoading(true)
     try {      
       const user = await signInWithEmailAndPassword( auth ,data.email, data.password)
-      
-
+      if(user){
+        setLoading(false) 
+      }
     } catch (error) {
-      if (error.code === 'auth/user-not-found') {
+      if (error.code === 'auth/user-not-found') {  
         setError('email',{
           type: error.code,
           message: "User not found"
         })
+        setLoading(false)
+         
       } else if (error.code === 'auth/wrong-password') {
+      
         setError('password',{
           type: error.code,
           message: "Incorect password"
         })
+        setLoading(false)
       } else {
         setError(error.message);
+        setLoading(false)
       }
     }
   };
@@ -50,8 +54,12 @@ const SignInScreen = () => {
   }
   
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>      
-      <View style={styles.container}>
+    <ScrollView showsVerticalScrollIndicator={false}>    
+    {loading && 
+         <ActivityIndicator size={100 || 'large'} color="#10B981" style={[styles.loading]} />    
+      }   
+      <View style={[styles.container, { height: Dimensions.get('screen').height-240}]}>             
+
         <Text>Email/Phone number</Text>
             <CustomInput 
               name="email"          
@@ -85,22 +93,31 @@ const SignInScreen = () => {
             text="Login"
             onPress={handleSubmit(onLoginPressed)}       
             />
+            <SocialSignButtons/>
           </View>
-          <SocialSignButtons/>
+          
     </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    padding: 20,
-  },
+  
   container: {
     width: '100%',
     paddingHorizontal: 20,
     marginTop: 30,
   },
+  loading:{
+    position: 'absolute',
+    top: -100,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 2,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 })
 
 export default SignInScreen;

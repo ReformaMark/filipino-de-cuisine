@@ -4,27 +4,19 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen/index'
-import ProfileScreen from '../screens/ProfileScreen'
-import MenuScreen from '../screens/MenuScreen/index'
-
+import AccountScreen from '../screens/AccountScreen'
+import MenuScreen from '../screens/MenuScreen/MenuScreen'
 import CartScreen from '../screens/CartScreen';
-import { useIsFocused } from '@react-navigation/native';
+import FoodScreen from '../screens/MenuScreen/FoodScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-const MyTheme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: 'rgb(255, 45, 85)',
-    },
-  };
 
 const HomeStack = createStackNavigator()
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator screenOptions={{ headerShown: false,  }} >
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="HomeScreen" component={HomeScreen}/>
     </HomeStack.Navigator>
   );
 }
@@ -32,7 +24,24 @@ const MenuStack = createStackNavigator()
 function MenuStackScreen (){
   return (
     <MenuStack.Navigator>
-      <MenuStack.Screen name="Menu" component={MenuScreen} />
+      <MenuStack.Screen 
+        name="MenuScreen" 
+        component={MenuScreen} 
+        options={{
+            headerStatusBarHeight: 45,
+            headerTitleAlign: 'center', // center align the title
+            headerTitle: 'Menu', // set the title
+          }} 
+      />
+      <MenuStack.Screen 
+        name="FoodScreen"
+        component={FoodScreen}
+        options={{
+          headerStatusBarHeight: 45,
+          headerTitleAlign: 'center', // center align the title
+          headerTitle: 'Menu', // set the title
+        }} 
+      />
     </MenuStack.Navigator>
   );
 }
@@ -42,7 +51,7 @@ const ProfileStack = createStackNavigator()
 function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      <ProfileStack.Screen name="ProfileScreen" component={AccountScreen} />
     </ProfileStack.Navigator>
   );
 }

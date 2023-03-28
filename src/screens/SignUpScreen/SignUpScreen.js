@@ -36,7 +36,7 @@ const SignUpScreen = () => {
         alert(error)
       }); 
     
-    navigation.navigate('SignIn');
+    navigation.navigate('Sign In');
 
     } catch (err) {
       if(err.code === 'auth/email-already-in-use'){
@@ -63,7 +63,7 @@ const SignUpScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.root}>
+     
         <View style={styles.container}>
           <Text>Username</Text>
             <CustomInput
@@ -77,7 +77,7 @@ const SignUpScreen = () => {
             />
           <Text>Email</Text>
             <CustomInput     
-            name='signupEmail'
+            name='email'
             control={control}         
             placeholder="Email"
             rules={{
@@ -92,13 +92,13 @@ const SignUpScreen = () => {
             placeholder="Phone number"
             keyboardType='numeric'
             rules={{
-              required: "Confirm password is required", 
+              required: "Phone number is required", 
               minLength: {value: 11, message: "Please enter a valid phone number."}
             }}            
             />
           <Text>Password</Text>
             <CustomInput 
-            name='SignUpPassword'
+            name='password'
             control={control}        
             placeholder="Password"
             secureTextEntry={true} 
@@ -114,7 +114,7 @@ const SignUpScreen = () => {
             placeholder="Confirm password"
             secureTextEntry={true} 
             rules={{
-              validate: value => value === SignupPassword || 'Password does not match',
+              validate: value => value === password || 'Password does not match',
               required: "Confirm password is required", 
               minLength: {value: 6, message: "Confirm password should be minimum of 6 characters long."}
             }}
@@ -122,23 +122,22 @@ const SignUpScreen = () => {
           <View style={styles.signupBtn}>
             <CustomButton 
                 text="Sign Up"
-                onPress={handleSubmit(()=>{})}      
+                onPress={handleSubmit(onRegisterPressed)}      
             />
           </View> 
-        </View>
-
-        
-      </View>
-      <SocialSignButtons />
+          <SocialSignButtons />
+        </View>      
     </ScrollView>
   )
 }
+export default SignUpScreen
 
 // styles
 const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    padding: 20,
+  container: {
+    width: '100%',
+    paddingHorizontal: 20,
+    marginTop: 30,
   },
   title: {
     fontSize: 24,
@@ -155,5 +154,5 @@ const styles = StyleSheet.create({
 
   }
 })
-export default SignUpScreen
+
 

@@ -1,12 +1,17 @@
+import { stringify } from '@firebase/util';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAuth, EmailAuthProvider, signInWithCredential } from 'firebase/auth';
 
 const SESSION_STORAGE_KEY = 'myapp_session';
 const auth = getAuth();
+
 async function saveSession(user) {
   try {
-    const sessionData = JSON.stringify(user.toJSON());
+    const sessionData = JSON.stringify(user)
+      console.log(sessionData)
     await AsyncStorage.setItem(SESSION_STORAGE_KEY, sessionData);
+    console.log("Successfully set AsyncStorage")
+    
   } catch (error) {
     console.error('Error saving session:', error);
   }
@@ -14,7 +19,7 @@ async function saveSession(user) {
 
 async function clearSession() {
   try {
-    await AsyncStorage.removeItem(SESSION_STORAGE_KEY);
+    await AsyncStorage.removeItem (SESSION_STORAGE_KEY);
   } catch (error) {
     console.error('Error clearing session:', error);
   }
@@ -29,13 +34,14 @@ async function getSession() {
         return user;
       } else {
         const userData = JSON.parse(sessionData);
-        const credential = EmailAuthProvider.credential(userData.email, userData.password);
-        await signInWithCredential(auth, credential);
+        const {_tokenResponse: {displayName, email,}} = userData;
+        
+        
         return auth.currentUser;
       }
-    }
+    } 
   } catch (error) {
-    console.error('Error getting session:', error);
+    console.error('Error getting session:', error.response);
   }
 }
 

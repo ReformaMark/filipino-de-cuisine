@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         padding: 5,
-        marginVertical: 10,
+        marginVertical: 0,
         alignItems: 'center',
         borderRadius: 5,
         justifyContent: 'center'
@@ -74,11 +74,11 @@ const styles = StyleSheet.create({
     container_SOCIAL:{
         width: '100%',
         padding: 10,
-        paddingLeft: 20,
+        borderRadius: 20,
+        paddingLeft: 30,
         marginVertical: 10,
         flexDirection: 'row',
-        justifyContent: 'flex-start',
-        rowGap: 100 ,
+        justifyContent: 'flex-start',        
         columnGap: 60,
     },
 
