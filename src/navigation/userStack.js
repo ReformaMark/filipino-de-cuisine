@@ -8,6 +8,8 @@ import AccountScreen from '../screens/AccountScreen'
 import MenuScreen from '../screens/MenuScreen/MenuScreen'
 import CartScreen from '../screens/CartScreen';
 import FoodScreen from '../screens/MenuScreen/FoodScreen';
+import { View } from 'react-native';
+import CartIcon from '../components/CartIcon';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -105,7 +107,17 @@ export default function MainStackNavigator() {
           component={CartScreen}
           options={{
             headerShown: true,
-            title: 'Cart'
+            headerTitleAlign: 'center',
+            title: 'Your Cart',
+            headerStyle: {
+              backgroundColor: '#CBCBCB',
+              height: 120,
+            },
+            headerRight: () => (
+              <View style={{ marginRight: 20, justifyContent:'center' }}>
+                <CartIcon/>
+              </View>
+            ),
           }}
         />
       </Stack.Navigator>

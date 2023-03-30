@@ -1,23 +1,28 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, ScrollView} from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { 
+  StyleSheet, 
+  Text,
+  View, 
+  ScrollView} from 'react-native'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignButtons from '../../components/SocialSignButtons'
 import { EMAIL_REGEX } from '../../components/Regex/Regex'
 import {useForm} from 'react-hook-form'
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  sendEmailVerification, 
+  updateProfile } from 'firebase/auth';
 
 
 const auth = getAuth();
 
 
-const SignUpScreen = () => {
+const SignUpScreen = ({navigation}) => {
 
-  const navigation = useNavigation();
-  const {control, handleSubmit, formState: {errors}, watch} = useForm();
-  const password = watch('password')
-  const {error, setError } = useState('');
+  const {control, handleSubmit,setError,reset, watch} = useForm();
+  const password = watch('password');
 
   // Firebase Authentication methods
   const onRegisterPressed = async (data) => {
@@ -25,27 +30,31 @@ const SignUpScreen = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(() => {
-        console.log(userCredential);
-        sendEmailVerification(auth.currentUser);
+        console.log(userCredential);             
         updateProfile(auth.currentUser, {
-          displayName: data.username
+          displayName: data.username,
+          phoneNumber: data.phoneNumber,
         })
+        reset();
         console.log("Email verification link has been sent")
       })
       .catch(error => {
-        alert(error)
+        if(error.code === 'auth/email-already-in-use'){
+          console.log('Registration failed: Email already in use')
+          setError('email',{
+            type: error.code,
+            message: "Email already in used"
+          })
+        }
       }); 
-    
-    navigation.navigate('Sign In');
-
     } catch (err) {
       if(err.code === 'auth/email-already-in-use'){
         console.log('Registration failed: Email already in use')
       } else{
         console.log(err.message)
       }
-        
     }
+    navigation.navigate('EmailVerify');
   };
    
   

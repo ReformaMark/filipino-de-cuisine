@@ -10,6 +10,7 @@ import Breakfast from './images/breakfast.png'
 import Lunch from './images/launch.png'
 import Dinner from './images/dinner.png'
 import CustomButton from '../../components/CustomButton';
+import CustomSearchBar from '../../components/CustomSearchBar/CustomSearchBar';
 
 const MenuScreen = ({navigation}) => {
   const {control, handleSubmit,setError, formState: {errors}} = useForm();
@@ -28,14 +29,7 @@ const MenuScreen = ({navigation}) => {
 
   return (
     <View style={styles.root}>
-      <View style={{paddingHorizontal: 20, marginVertical: 10}}>
-        <CustomInput 
-          name="search"          
-          placeholder="Search foods" 
-          iconName='search'
-          control={control}
-        />          
-      </View>
+      <CustomSearchBar/>
       <View>
         <Logo/>
       </View>

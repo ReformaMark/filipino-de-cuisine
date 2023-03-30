@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function CartIcon() {
   const navigation = useNavigation()
-  const [cartItemsCount, setCartItemsCount] = useState(1);
+  const [cartItemsCount, setCartItemsCount] = useState(0);
 
   const handleAddToCart = (item) => {
     // add item to cart

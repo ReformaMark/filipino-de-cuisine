@@ -3,44 +3,61 @@ import { View, Image, StyleSheet, ScrollView, Dimensions } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import SignInSignUp from '../screens/SignInSignUpScreen/index';
 import SignInScreen from '../screens/SignInScreen/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen/SignUpScreen';
+import EmailVerificationScreen from '../screens/SignUpScreen/EmailVerificationScreen';
 
-const Tab = createMaterialTopTabNavigator();
+  const Tab = createMaterialTopTabNavigator();
 
-
-
-export default function AuthStack() {
-    return (
-      <>
-        <Image 
-          source={require('./images/image.png')} 
-          style={{ 
-            width: Dimensions.get('screen').width , 
-            height: 100, marginBottom: 20 }} 
+  function MainAuthTabNavigator (){
+  return (
+    <>
+      <Image 
+        source={require('./images/image.png')} 
+        style={{ 
+          width: Dimensions.get('screen').width , 
+          height: 100, marginBottom: 20 }} 
+      />
+    
+      <Tab.Navigator 
+      screenOptions={{
+        activeTintColor: 'white',
+        inactiveTintColor: 'gray',
+        style: { backgroundColor: 'green' },
+        indicatorStyle: { backgroundColor: 'red' },
+      }}             
+      >
+        <Tab.Screen 
+        name="Sign In" 
+        component={SignInScreen}        
         />
-     
+        <Tab.Screen 
+          name="Sign Up" 
+          component={SignUpScreen}
+        
+        />
+      </Tab.Navigator>
+    </>
+    );
+  };
+
+  export default function MainAuthStackNavigator (){
+    const Stack = createStackNavigator()
+    return (      
       <NavigationContainer>
-        <Tab.Navigator 
-        screenOptions={{
-          activeTintColor: 'white',
-          inactiveTintColor: 'gray',
-          style: { backgroundColor: 'green' },
-          indicatorStyle: { backgroundColor: 'red' },
-        }}             
-        >
-          <Tab.Screen 
-          name="Sign In" 
-          component={SignInScreen}        
+        <Stack.Navigator>
+          <Stack.Screen 
+            name="MainAuthTab" 
+            component={MainAuthTabNavigator}
+            options={{ headerShown: false}} 
           />
-          <Tab.Screen 
-            name="Sign Up" 
-            component={SignUpScreen}
+          <Stack.Screen
+            name='EmailVerify'
+            component={EmailVerificationScreen}
           
           />
-        </Tab.Navigator>
-      </NavigationContainer>
-      </>
-    );
-  }
+        </Stack.Navigator>
+      </NavigationContainer>     
+    )
+  };
+

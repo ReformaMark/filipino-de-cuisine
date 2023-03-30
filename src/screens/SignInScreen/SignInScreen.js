@@ -9,17 +9,25 @@ import { useForm } from 'react-hook-form'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const auth = getAuth();
-const SignInScreen = () => {
-  const navigation = useNavigation();
+const SignInScreen = ({navigation}) => {
   const {control, handleSubmit,setError, formState: {errors}} = useForm();
   const [loading, setLoading ] = useState(false);
   
   const onLoginPressed = async (data) => {  
     setLoading(true)
     try {      
-      const user = await signInWithEmailAndPassword( auth ,data.email, data.password)
+      const userCredential = await signInWithEmailAndPassword( auth ,data.email, data.password)
+      const user = userCredential.user;
       if(user){
+        console.log(user)
         setLoading(false) 
+        if (!user.emailVerified) {
+          navigation.navigate('EmailVerify')
+          console.log('User is not verified');
+        } else {
+          // User is verified, proceed to the app
+          console.log('User is verified');
+        }
       }
     } catch (error) {
       if (error.code === 'auth/user-not-found') {  
@@ -99,7 +107,7 @@ const SignInScreen = () => {
     </ScrollView>
   )
 }
-
+export default SignInScreen;
 const styles = StyleSheet.create({
   
   container: {
@@ -120,4 +128,3 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SignInScreen;
