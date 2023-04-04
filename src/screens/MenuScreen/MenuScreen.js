@@ -33,8 +33,8 @@ const MenuScreen = ({navigation}) => {
       <View>
         <Logo/>
       </View>
-      <View style={[styles.container,]}>
-        <TouchableOpacity onPress={() => {navigation.push('FoodScreen')}}>
+      <View style={[styles.container]}>
+        <TouchableOpacity onPress={() => {navigation.push('FoodScreen', { category: 'Breakfast' })}}>
           <Card containerStyle={{padding: 0, width: 145, backgroundColor: 'transparent', borderColor: '#fff' }}>
             {/*need to use array map when fetching data from db example: https://reactnativeelements.com/docs/components/card */}
             <Card.Image
@@ -48,7 +48,7 @@ const MenuScreen = ({navigation}) => {
             />
           </Card>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {navigation.push('FoodScreen')}}>
+        <TouchableOpacity onPress={() => {navigation.push('FoodScreen', { category: 'Lunch' })}}>
           <Card containerStyle={{padding: 0, width: 145, backgroundColor: 'transparent', borderColor: '#fff' }}>
             {/*need to use array map when fetching data from db example: https://reactnativeelements.com/docs/components/card */}
             <Card.Image
@@ -62,7 +62,7 @@ const MenuScreen = ({navigation}) => {
             />
           </Card>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {navigation.push('FoodScreen')}}>
+        <TouchableOpacity onPress={() => {navigation.push('FoodScreen', { category: 'Dinner' })}}>
           <Card containerStyle={{padding: 0, width: 145, backgroundColor: 'transparent', borderColor: '#fff' }}>
             {/*need to use array map when fetching data from db example: https://reactnativeelements.com/docs/components/card */}
             <Card.Image

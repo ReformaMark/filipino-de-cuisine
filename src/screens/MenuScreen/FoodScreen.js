@@ -6,8 +6,9 @@ import CustomButton from '../../components/CustomButton';
 import axios from 'axios';
 import { Icon, Image } from '@rneui/themed';
 import Breakfast from './images/breakfast.png'
-const FoodScreen = ({navigation}) => {
-
+const FoodScreen = ({navigation, route}) => {
+  const {category} = route.params;
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [menuItems, setMenuItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
     //set icon to the right of the header navbar
@@ -36,6 +37,11 @@ const FoodScreen = ({navigation}) => {
     fetchMenuItems();
   },[])
 
+  const handleCategoryPress = (category) => {
+    setSelectedCategory(category);
+  }
+  const filteredMenuItems = menuItems.filter(item => item.category === selectedCategory);
+
   return (
     <SafeAreaView style={{alignItems: 'center'}}>
       <CustomSearchBar/>
@@ -54,11 +60,11 @@ const FoodScreen = ({navigation}) => {
         {isLoading ? 
           <ActivityIndicator size={'large'} color="#10B981" /> :  
           <ScrollView style={styles.container}>
-            {menuItems.map(menuItem => (
+            {filteredMenuItems.map(menuItem => (
               <View key={menuItem.id} style={styles.item}>
                 <Image 
                   source={Breakfast}
-                  containerStyle={styles.Image}
+                  containerStyle={{ width: 60, height: 60 }}
                   PlaceholderContent={<ActivityIndicator />}
                   resizeMode='contain'                  
                 />                
@@ -90,6 +96,8 @@ const styles = StyleSheet.create({
     marginBottom: 120,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
+    width: '100%',
+    height: '100%',
   },
   category: {
     flexDirection: 'row',

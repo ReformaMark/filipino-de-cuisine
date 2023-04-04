@@ -92,7 +92,7 @@ const SignInScreen = ({navigation}) => {
             <View>
               <CustomButton           
                   text="Forgot Password?"
-                  onPress={handleSubmit(onLoginPressed)}
+                  onPress={onForgotPasswordPressed}
                   type="TERTIARY"
               />
             </View>
