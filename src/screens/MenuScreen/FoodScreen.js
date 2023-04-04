@@ -6,8 +6,11 @@ import CustomButton from '../../components/CustomButton';
 import axios from 'axios';
 import { Icon, Image } from '@rneui/themed';
 import Breakfast from './images/breakfast.png'
-const FoodScreen = ({navigation, route}) => {
-  const {category} = route.params;
+import { useRoute } from '@react-navigation/native';
+
+const FoodScreen = ({navigation}) => {
+  const route = useRoute();
+  const category = route.params.category;
   const [selectedCategory, setSelectedCategory] = useState('');
   const [menuItems, setMenuItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,7 +43,7 @@ const FoodScreen = ({navigation, route}) => {
   const handleCategoryPress = (category) => {
     setSelectedCategory(category);
   }
-  const filteredMenuItems = menuItems.filter(item => item.category === selectedCategory);
+  const filteredMenuItems = menuItems.filter(item => item.category === category);
 
   return (
     <SafeAreaView style={{alignItems: 'center'}}>

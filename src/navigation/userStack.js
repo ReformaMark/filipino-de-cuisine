@@ -30,7 +30,7 @@ function MenuStackScreen (){
         name="MenuScreen" 
         component={MenuScreen} 
         options={{
-            headerStatusBarHeight: 45,
+            headerStatusBarHeight: 30,
             headerTitleAlign: 'center', // center align the title
             headerTitle: 'Menu', // set the title
           }} 
