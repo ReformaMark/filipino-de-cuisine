@@ -60,7 +60,7 @@ import ForgotPasswordScreen from '../screens/SignInScreen/ForgotPasswordScreen';
           <Stack.Screen
             name='ForgotPassword'
             component={ForgotPasswordScreen}
-          
+            options={{ headerShown: false}} 
           />
         </Stack.Navigator>
       </NavigationContainer>     

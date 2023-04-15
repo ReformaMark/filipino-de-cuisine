@@ -7,7 +7,6 @@ import HomeScreen from '../screens/HomeScreen/index'
 import AccountScreen from '../screens/AccountScreen'
 import MenuScreen from '../screens/MenuScreen/MenuScreen'
 import CartScreen from '../screens/CartScreen';
-import FoodScreen from '../screens/MenuScreen/FoodScreen';
 import { View } from 'react-native';
 import CartIcon from '../components/CartIcon';
 
@@ -34,15 +33,6 @@ function MenuStackScreen (){
             headerTitleAlign: 'center', // center align the title
             headerTitle: 'Menu', // set the title
           }} 
-      />
-      <MenuStack.Screen 
-        name="FoodScreen"
-        component={FoodScreen}
-        options={{
-          headerStatusBarHeight: 45,
-          headerTitleAlign: 'center', // center align the title
-          headerTitle: 'Menu', // set the title
-        }} 
       />
     </MenuStack.Navigator>
   );
