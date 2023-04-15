@@ -16,6 +16,13 @@ const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type
         render={({field: {value, onChange, onBlur}, fieldState:{error}}) => (
           <>
             <View style={[styles.container, {borderColor: error ? 'red' : '#dea02c'}]}>
+              
+              <Icon 
+                type={type}
+                name={iconName}
+                color={colors.darkBrown}
+                size={28}     
+              />
               <TextInput
                 value={value}
                 onChangeText={onChange}
@@ -25,14 +32,7 @@ const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type
                 secureTextEntry = {secureTextEntry}
                 keyboardType={keyboardType}
               />
-              <TouchableOpacity>
-              <Icon 
-                  type={type}
-                  name={iconName}
-                  color={colors.darkBrown}
-                  size={28}     
-                />
-              </TouchableOpacity>
+       
             </View>
             {error && (<Text style={{color: 'red', alignSelf: 'stretch'}}>{error.message || 'Error'}</Text>)}
           </>

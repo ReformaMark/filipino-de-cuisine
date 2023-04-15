@@ -110,6 +110,7 @@ const SignInScreen = ({navigation}) => {
   )
 }
 export default SignInScreen;
+
 const styles = StyleSheet.create({
   
   container: {

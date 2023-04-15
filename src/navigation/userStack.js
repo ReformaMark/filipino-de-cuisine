@@ -3,7 +3,7 @@ import { NavigationContainer, DefaultTheme, useNavigation  } from '@react-naviga
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import HomeScreen from '../screens/HomeScreen/index'
+import HomeScreen from '../screens/HomeScreen/HomeScreen'
 import AccountScreen from '../screens/AccountScreen'
 import MenuScreen from '../screens/MenuScreen/MenuScreen'
 import CartScreen from '../screens/CartScreen';
