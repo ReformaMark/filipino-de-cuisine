@@ -5,8 +5,12 @@ import { colors } from '../../global/styles';
 import { Controller } from 'react-hook-form';
 import { TouchableOpacity } from 'react-native';
 
-const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type, iconName, keyboardType}) => {
-  
+const CustomPasswordInput = ({control, name, placeholder,rules={}, secureTextEntry, type, iconName, keyboardType}) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
       <Controller 
@@ -22,15 +26,15 @@ const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type
                 onBlur={onBlur}
                 placeholder={placeholder}
                 style={styles.input}
-                secureTextEntry = {secureTextEntry}
+                secureTextEntry = {!showPassword}
                 keyboardType={keyboardType}
               />
-              <TouchableOpacity>
-              <Icon 
-                  type={type}
-                  name={iconName}
+               <TouchableOpacity onPress={togglePasswordVisibility} style={styles.icon}>
+                <Icon 
+                  type='font-awesome'
+                  name={showPassword ? "eye" : "eye-slash" }
                   color={colors.darkBrown}
-                  size={28}     
+                  size={30}     
                 />
               </TouchableOpacity>
             </View>
@@ -40,6 +44,8 @@ const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type
       />
   )
 };
+
+export default CustomPasswordInput
 
 const styles = StyleSheet.create({
     container: {
@@ -53,7 +59,13 @@ const styles = StyleSheet.create({
     },
     input: {
      width: '100%',
-    }
+     borderColor: colors.darkBrown,
+     padding: 5,
+    },
+    icon:{
+      position: 'absolute',
+      top: 10,
+      left: 280,
+    },
   })
 
-export default CustomInput

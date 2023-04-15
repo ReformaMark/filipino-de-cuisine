@@ -7,12 +7,15 @@ import { useNavigation } from '@react-navigation/native'
 import { EMAIL_REGEX } from '../../components/Regex/Regex'
 import { useForm } from 'react-hook-form'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import CustomPasswordInput from '../../components/CustomPasswordInput/CustomPasswordInput'
+
 
 const auth = getAuth();
 const SignInScreen = ({navigation}) => {
   const {control, handleSubmit,setError, formState: {errors}} = useForm();
   const [loading, setLoading ] = useState(false);
-  
+ 
+
   const onLoginPressed = async (data) => {  
     setLoading(true)
     try {      
@@ -62,7 +65,7 @@ const SignInScreen = ({navigation}) => {
   }
   
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>    
+    <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: 'white'}}>    
     {loading && 
          <ActivityIndicator size={100 || 'large'} color="#10B981" style={[styles.loading]} />    
       }   
@@ -79,7 +82,7 @@ const SignInScreen = ({navigation}) => {
               }}
             />
         <Text>Password</Text>
-            <CustomInput 
+            <CustomPasswordInput 
               name="password"
               placeholder="Password"
               control={control}
@@ -87,7 +90,6 @@ const SignInScreen = ({navigation}) => {
                 required: "Password is required", 
                 minLength: {value: 6, message: "Password should be minimum of 6 characters long."}
               }}
-              secureTextEntry={true} 
             />           
             <View>
               <CustomButton           
@@ -114,6 +116,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     marginTop: 30,
+    backgroundColor: 'white',
   },
   loading:{
     position: 'absolute',

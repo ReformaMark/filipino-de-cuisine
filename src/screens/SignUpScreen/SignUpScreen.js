@@ -14,6 +14,7 @@ import {
   createUserWithEmailAndPassword, 
   sendEmailVerification, 
   updateProfile } from 'firebase/auth';
+import CustomPasswordInput from '../../components/CustomPasswordInput/CustomPasswordInput'
 
 
 const auth = getAuth();
@@ -71,7 +72,7 @@ const SignUpScreen = ({navigation}) => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: 'white'}}>
      
         <View style={styles.container}>
           <Text>Username</Text>
@@ -106,22 +107,20 @@ const SignUpScreen = ({navigation}) => {
             }}            
             />
           <Text>Password</Text>
-            <CustomInput 
+            <CustomPasswordInput 
             name='password'
             control={control}        
             placeholder="Password"
-            secureTextEntry={true} 
             rules={{
               required: "Password is required", 
               minLength: {value: 6, message: "Password should be minimum of 6 characters long."}
             }}
             />
           <Text>Confirm password</Text>
-            <CustomInput 
+            <CustomPasswordInput 
             name='confirmPassword'
             control={control}     
             placeholder="Confirm password"
-            secureTextEntry={true} 
             rules={{
               validate: value => value === password || 'Password does not match',
               required: "Confirm password is required", 
@@ -161,7 +160,10 @@ const styles = StyleSheet.create({
   link: {
     color: '#FDB075'
 
-  }
+  },
+  signupBtn:{
+    marginVertical: 20,
+  },
 })
 
 
