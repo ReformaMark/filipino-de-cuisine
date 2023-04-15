@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground,ScrollView, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View,ScrollView, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { useForm } from 'react-hook-form'
 import StarRating from 'react-native-star-rating';
 import CartIcon from '../../components/CartIcon';
@@ -8,6 +8,7 @@ import Logo from '../../components/Logo';
 import CrispyPata from './images/CrispyPata.png'
 import Veggies from './images/Veggies.png'
 import Foods from './images/Food.png'
+import { Dimensions } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
   const {width} = useWindowDimensions();
@@ -74,6 +75,15 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity style={styles.btnPrimary}>
             <Text onPress={() => navigation.navigate('Menu')} style={styles.bookReservation}>Book a Reservation</Text>
           </TouchableOpacity>
+        </View>
+
+        <View style={styles.popularDish}>
+          <View style={styles.popularDishImage}>
+            <Image source={CrispyPata} style={styles.dish}/>
+          </View>
+          <Text style={styles.name}>Crispy Pata</Text>
+          <Text style={styles.price}>₱ 80.00</Text>
+          <Text style={styles.description}>Crispy pata is a pork-lover's delight—crunchy pork skin enclosing savory tender meat. Crispy pata is usually defined as deep-fried pork trotters or knuckles.</Text>
         </View>
       </View>
     </ScrollView>
@@ -145,13 +155,14 @@ const styles = StyleSheet.create({
   container:{
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor:'rgba(0, 0, 0, 0.15)',
-    marginVertical: 30,
+    backgroundColor:'rgba(0, 0, 100, 0.10)',
+    marginTop: 30,
     padding: 20,
   },
   btnContainer:{
     flexDirection: 'row',
     marginTop: 20,
+    marginBottom: 80,
   },
   btnOutline:{
     alignItems: 'center',
@@ -182,5 +193,35 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  popularDish:{
+    backgroundColor:'#fff',
+    borderRadius: 25,
+    padding: 20,
+  },
+  popularDishImage:{
+   position: 'absolute',
+   top: -50,
+   left: 0,
+  },
+  dish:{
+    width: Dimensions.get('screen').width * 0.4,
+    height: 135,
+  },
+  name:{
+    fontSize: 22,
+    fontWeight: '700',
+    marginLeft: Dimensions.get('screen').width * 0.36,
+  },
+  price:{
+    fontSize: 14,
+    fontWeight: '700',
+    marginLeft: Dimensions.get('screen').width * 0.36,
+    marginBottom: 10,
+  },
+  description:{
+    fontSize: 8,
+    fontWeight: '400',
+  },
+  
  
 });
