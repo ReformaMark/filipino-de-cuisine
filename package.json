@@ -35,7 +35,9 @@
     "react-hook-form": "^7.43.5",
     "react-native": "0.71.6",
     "react-native-elements": "^3.4.3",
+    "react-native-flash-message": "^0.4.1",
     "react-native-star-rating": "^1.1.0",
+    "react-native-toast-notifications": "^3.3.1",
     "react-native-viewpager": "^0.2.13"
   },
   "devDependencies": {

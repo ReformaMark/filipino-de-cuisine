@@ -1,17 +1,35 @@
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React,{ useLayoutEffect, useState, useEffect, useContext } from 'react'
+import React,{ useLayoutEffect, useState, useEffect, useContext,   } from 'react'
 import CartIcon from '../../components/CartIcon';
 import { Card, Image } from '@rneui/themed';
 import Breakfast from './images/breakfast.png'
 import HeaderImage from './images/headerImage.png';
 import useMenuItems from '../../hooks/useMenuItems';
-import { CartContext } from '../../context/cartContext';
+import axios from 'axios';
+import { useAuthentication } from '../../hooks/useAuthentication';
+import { useToast } from "react-native-toast-notifications";
+
 const MenuScreen = ({navigation}) => {
-  const { addToCart, cartItems } = useContext(CartContext);
+  const toast = useToast();
+
+  const { user } = useAuthentication();
   const [selectedCategory, setSelectedCategory] = useState('Appetizer');
   const [filteredMenuItems, isLoading] = useMenuItems(selectedCategory);
 
  
+  const orderItem = async (userId, quantity, menuItemId) => {
+    try {
+      const response = await axios.post('http://192.168.100.18:3000/api/orderItem', { userId, quantity, menuItemId });
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error creating order item.');
+    }
+  };
+ 
+  useEffect(() => {
+    
+  }, []);
   //set icon to the right of the header navbar
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -23,9 +41,19 @@ const MenuScreen = ({navigation}) => {
     });
   }, [navigation]);
 
-  const handleAddToCart = (item) => {
-    addToCart(item);
-    console.log(item);
+  const handleAddToCart = async (item) => {
+    try {
+      const orderItemData = await orderItem(user.uid, 1, item.id);
+      toast.show(`${item.name} Added to cart!`, {
+        type: "success",
+        placement: "bottom",
+        duration: 2000,
+        offset: 100,
+        animationType: "slide-in"
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const renderMenuItems = () => {
@@ -61,8 +89,8 @@ const MenuScreen = ({navigation}) => {
 
   return (
     <View style={styles.root}>
-      <View>
-       
+    
+      <View>       
         <Image
           source={HeaderImage}
           resizeMode='stretch'
@@ -101,7 +129,7 @@ const MenuScreen = ({navigation}) => {
           {renderMenuItems()}
         </View>
       </ScrollView>
-      
+    
     </View>
   )
 }

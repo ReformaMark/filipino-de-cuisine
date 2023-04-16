@@ -10,6 +10,7 @@ import CartScreen from '../screens/CartScreen';
 import { View } from 'react-native';
 import CartIcon from '../components/CartIcon';
 import { CartProvider } from '../context/cartContext';
+import { ToastProvider } from 'react-native-toast-notifications'
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -86,7 +87,7 @@ function ProfileStackScreen() {
 
 export default function MainStackNavigator() {
   return (
-    <CartProvider>
+    <ToastProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen 
@@ -114,6 +115,6 @@ export default function MainStackNavigator() {
         />
       </Stack.Navigator>
     </NavigationContainer>
-    </CartProvider>
+    </ToastProvider>
   );
 }

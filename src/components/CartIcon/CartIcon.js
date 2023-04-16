@@ -1,16 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import { useAuthentication } from '../../hooks/useAuthentication';
+import axios from 'axios';
 
 export default function CartIcon() {
-  const navigation = useNavigation()
+  const { user } = useAuthentication();
+  const navigation = useNavigation();
+  const [orderItem, setOrderItem] = useState([]);
   const [cartItemsCount, setCartItemsCount] = useState(0);
 
-  const handleAddToCart = (item) => {
-    // add item to cart
-    setCartItemsCount((prevCount) => prevCount + 1);
-  };
+  useEffect(() => {
+    const fetchOrderItem = async () => {
+      try {
+        const response = await axios.get('http://192.168.100.18:3000/api/orderItem');
+        setOrderItem(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchOrderItem();
+  }, []);
+
+  useEffect(() => {
+    const filteredOrderItems = orderItem.filter((item) => item.userId === user.uid).length;
+    setCartItemsCount(filteredOrderItems);
+  }, [orderItem]);
 
   return (
     <View style={styles.container}>
