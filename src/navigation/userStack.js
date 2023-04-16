@@ -9,6 +9,7 @@ import MenuScreen from '../screens/MenuScreen/MenuScreen'
 import CartScreen from '../screens/CartScreen';
 import { View } from 'react-native';
 import CartIcon from '../components/CartIcon';
+import { CartProvider } from '../context/cartContext';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -85,6 +86,7 @@ function ProfileStackScreen() {
 
 export default function MainStackNavigator() {
   return (
+    <CartProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen 
@@ -100,7 +102,7 @@ export default function MainStackNavigator() {
             headerTitleAlign: 'center',
             title: 'Your Cart',
             headerStyle: {
-              backgroundColor: '#CBCBCB',
+              backgroundColor: 'white',
               height: 120,
             },
             headerRight: () => (
@@ -112,5 +114,6 @@ export default function MainStackNavigator() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </CartProvider>
   );
 }

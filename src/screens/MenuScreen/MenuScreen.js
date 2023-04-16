@@ -1,15 +1,17 @@
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React,{ useLayoutEffect, useState, useEffect } from 'react'
+import React,{ useLayoutEffect, useState, useEffect, useContext } from 'react'
 import CartIcon from '../../components/CartIcon';
 import { Card, Image } from '@rneui/themed';
 import Breakfast from './images/breakfast.png'
 import HeaderImage from './images/headerImage.png';
 import useMenuItems from '../../hooks/useMenuItems';
-
+import { CartContext } from '../../context/cartContext';
 const MenuScreen = ({navigation}) => {
+  const { addToCart, cartItems } = useContext(CartContext);
   const [selectedCategory, setSelectedCategory] = useState('Appetizer');
   const [filteredMenuItems, isLoading] = useMenuItems(selectedCategory);
 
+ 
   //set icon to the right of the header navbar
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -20,6 +22,11 @@ const MenuScreen = ({navigation}) => {
       ),
     });
   }, [navigation]);
+
+  const handleAddToCart = (item) => {
+    addToCart(item);
+    console.log(item);
+  };
 
   const renderMenuItems = () => {
     if (isLoading) {
@@ -43,7 +50,7 @@ const MenuScreen = ({navigation}) => {
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.price}>₱ {item.price}</Text>
         <Text style={styles.description}>{item.description}</Text>
-        <TouchableOpacity onPress={()=>{}} style={styles.addtocart}>
+        <TouchableOpacity onPress={() => handleAddToCart(item)} style={styles.addtocart}>
           <Text style={styles.addtocartText}>Add to Cart</Text>
         </TouchableOpacity>          
       </View>

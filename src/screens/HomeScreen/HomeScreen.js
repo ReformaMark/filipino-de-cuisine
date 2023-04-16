@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { StyleSheet, Text, View,ScrollView, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { useForm } from 'react-hook-form'
 import StarRating from 'react-native-star-rating';
@@ -9,10 +9,12 @@ import CrispyPata from './images/CrispyPata.png'
 import Veggies from './images/Veggies.png'
 import Foods from './images/Food.png'
 import { Dimensions } from 'react-native';
+import { CartContext } from '../../context/cartContext';
 
 export default function HomeScreen({ navigation }) {
-  const {width} = useWindowDimensions();
- 
+
+  const {cartItems} = useContext(CartContext)
+  const {width} = useWindowDimensions(); 
   const {control, handleSubmit,setError, formState: {errors}} = useForm();
 
   return (
@@ -85,6 +87,9 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.price}>₱ 80.00</Text>
           <Text style={styles.description}>Crispy pata is a pork-lover's delight—crunchy pork skin enclosing savory tender meat. Crispy pata is usually defined as deep-fried pork trotters or knuckles.</Text>
         </View>
+        {cartItems.map((item, index) => (
+        <Text key={index}>{item.name}</Text>
+        ))}
       </View>
     </ScrollView>
   );
