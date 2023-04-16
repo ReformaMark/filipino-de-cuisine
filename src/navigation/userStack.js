@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen/HomeScreen'
 import AccountScreen from '../screens/AccountScreen'
 import MenuScreen from '../screens/MenuScreen/MenuScreen'
 import CartScreen from '../screens/CartScreen';
+import ReservationScreen from '../screens/ReservationScreen'
 import { View } from 'react-native';
 import CartIcon from '../components/CartIcon';
 import { CartProvider } from '../context/cartContext';
@@ -23,6 +24,7 @@ function HomeStackScreen() {
     </HomeStack.Navigator>
   );
 }
+
 const MenuStack = createStackNavigator()
 function MenuStackScreen (){
   return (
@@ -39,13 +41,23 @@ function MenuStackScreen (){
     </MenuStack.Navigator>
   );
 }
+const ReservationStack = createStackNavigator()
+function ReservationStackScreen() {
+  return (
+    <ReservationStack.Navigator screenOptions={{ headerShown: false,  }} >
+      <ReservationStack.Screen name="ReservationScreen" component={ReservationScreen}/>
+    </ReservationStack.Navigator>
+  );
+}
 
 
 const ProfileStack = createStackNavigator()
 function ProfileStackScreen() {
   return (
-    <ProfileStack.Navigator>
-      <ProfileStack.Screen name="ProfileScreen" component={AccountScreen} />
+    <ProfileStack.Navigator screenOptions={{ headerShown: false,  }}>
+      <ProfileStack.Screen 
+      name="ProfileScreen" 
+      component={AccountScreen}/>
     </ProfileStack.Navigator>
   );
 }
@@ -78,7 +90,7 @@ function ProfileStackScreen() {
       >
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Menu" component={MenuStackScreen} />
-        <Tab.Screen name="Reservation" component={ProfileStackScreen} />
+        <Tab.Screen name="Reservation" component={ReservationStackScreen} />
         <Tab.Screen name="Account" component={ProfileStackScreen} />        
       </Tab.Navigator>
 
