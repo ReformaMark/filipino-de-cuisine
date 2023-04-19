@@ -1,7 +1,7 @@
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React,{ useLayoutEffect, useState, useEffect, useContext,   } from 'react'
 import CartIcon from '../../components/CartIcon';
-import { Card, Image } from '@rneui/themed';
+import { Card, Image, Dialog, Divider } from '@rneui/themed';
 import Breakfast from './images/breakfast.png'
 import HeaderImage from './images/headerImage.png';
 import useMenuItems from '../../hooks/useMenuItems';
@@ -11,11 +11,11 @@ import { useToast } from "react-native-toast-notifications";
 
 const MenuScreen = ({navigation}) => {
   const toast = useToast();
-
+  const [visible, setVisible] = useState(false);
   const { user } = useAuthentication();
   const [selectedCategory, setSelectedCategory] = useState('Appetizer');
   const [filteredMenuItems, isLoading] = useMenuItems(selectedCategory);
-
+  const [selectedItem, setSelectedItem ] = useState();
  
   const orderItem = async (userId, quantity, menuItemId) => {
     try {
@@ -41,6 +41,12 @@ const MenuScreen = ({navigation}) => {
     });
   }, [navigation]);
 
+  //toggleDIalog box
+  const toggleDialog = (item) => {
+    setVisible(!visible);
+    setSelectedItem(item);
+  };
+
   const handleAddToCart = async (item) => {
     try {
       const orderItemData = await orderItem(user.uid, 1, item.id);
@@ -65,31 +71,35 @@ const MenuScreen = ({navigation}) => {
       return <Text>No items found for this category.</Text>;
     }
 
-    return filteredMenuItems.map((item) => (   
-    <Card key={item.id} containerStyle={styles.cardContainer} >           
-      <View style={styles.imageContainer}>
-        <Image
-          resizeMode='cover'
-          style={styles.image}
-          source={Breakfast}
-        />
-      </View>   
-      <View>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.price}>₱ {item.price}</Text>
-        <Text style={styles.description}>{item.description}</Text>
-        <TouchableOpacity onPress={() => handleAddToCart(item)} style={styles.addtocart}>
-          <Text style={styles.addtocartText}>Add to Cart</Text>
-        </TouchableOpacity>          
-      </View>
-            
-    </Card>
+    return filteredMenuItems.map((item) => (
+   
+      
+      <Card key={item.id} containerStyle={styles.cardContainer} > 
+       <TouchableOpacity  onPress={()=>toggleDialog(item)}>
+        <View style={styles.imageContainer}>
+          <Image
+            resizeMode='cover'
+            style={styles.image}
+            source={{uri:item.imgUrl}}
+          />
+        </View>   
+        <View>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.price}>₱ {item.price}</Text>
+          <Text style={styles.description} numberOfLines={7}>{item.description}</Text>
+          <TouchableOpacity onPress={() => handleAddToCart(item)} style={styles.addtocart}>
+            <Text style={styles.addtocartText}>Add to Cart</Text>
+          </TouchableOpacity>          
+        </View>
+    </TouchableOpacity>
+    
+      </Card>
+ 
     ));
   };
 
   return (
     <View style={styles.root}>
-    
       <View>       
         <Image
           source={HeaderImage}
@@ -129,7 +139,26 @@ const MenuScreen = ({navigation}) => {
           {renderMenuItems()}
         </View>
       </ScrollView>
-    
+      {selectedItem &&
+      <Dialog visible={visible} onBackdropPress={toggleDialog}>
+        <View style={styles.dialogImageTitlePriceContainer}>
+          <Image
+              resizeMode='cover'
+              style={styles.image}
+              source={{uri: selectedItem ? selectedItem.imgUrl : Breakfast}}
+            />
+          <View>
+            <Dialog.Title title={selectedItem.name}/>
+            <Text style={styles.price}>₱ {selectedItem.price}</Text>
+          </View>
+        </View>
+        <Divider />
+        <Text style={styles.dialogPrice}>{selectedItem.description}</Text>
+        <TouchableOpacity onPress={() => handleAddToCart(selectedItem)} style={styles.dialogAddtocart}>
+            <Text style={styles.dialogAddtocartText}>Add to Cart</Text>
+          </TouchableOpacity>
+      </Dialog>
+      }
     </View>
   )
 }
@@ -187,7 +216,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   name:{
-    fontSize: 12,
+    fontSize: 10,
     marginStart: 30,
     fontWeight: 700,
   },
@@ -202,7 +231,7 @@ const styles = StyleSheet.create({
   },
   addtocart:{
     position:'absolute',
-    top: 127,
+    top: 125,
     left: 23,
     width: '60%',
     backgroundColor:'#10B981',
@@ -247,4 +276,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
+  dialogImageTitlePriceContainer:{
+    flexDirection: 'row',
+  },
+  dialogAddtocart:{
+  
+    padding: 5,
+    width: '100%',
+    backgroundColor: '#10B981',
+    
+  },
+  dialogAddtocartText:{
+    textAlign: 'center',
+    color: 'white',
+  },
+  dialogPrice:{
+    marginVertical: 10,
+    textAlign: 'justify',
+  }
 })

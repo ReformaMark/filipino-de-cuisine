@@ -78,10 +78,10 @@ const CartScreen = ({ navigation }) => {
     setQuantity(() => currentQuantity - 1)
   };
 
-
+  console.log(orderItem)
   return (
     <View style={styles.root}>
-      {filteredOrderItems == null ? 
+      {orderItem === null ? 
         <View style={styles.container}>
           <Text style={styles.text}>Your cart is empty</Text>
           <View style={styles.addSomething}>

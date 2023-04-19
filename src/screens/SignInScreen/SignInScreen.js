@@ -3,7 +3,6 @@ import React,{ useState} from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignButtons from '../../components/SocialSignButtons'
-import { useNavigation } from '@react-navigation/native'
 import { EMAIL_REGEX } from '../../components/Regex/Regex'
 import { useForm } from 'react-hook-form'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -55,7 +54,6 @@ const SignInScreen = ({navigation}) => {
   };
 
   const onForgotPasswordPressed =  () =>{
-    console.warn("You pressed the forgot password")
 
     navigation.navigate('ForgotPassword')
   }
@@ -71,7 +69,7 @@ const SignInScreen = ({navigation}) => {
       }   
       <View style={[styles.container, { height: Dimensions.get('screen').height-240}]}>             
 
-        <Text>Email/Phone number</Text>
+        <Text>Email</Text>
             <CustomInput 
               name="email"          
               placeholder="Email" 
