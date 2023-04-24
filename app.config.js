@@ -3,6 +3,7 @@ export default {
   "expo": {
     "name": "filipino-de-cuisine",
     "slug": "filipino-de-cuisine",
+    "scheme": "filipino-de-cuisine",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",

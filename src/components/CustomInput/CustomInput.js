@@ -5,7 +5,7 @@ import { colors } from '../../global/styles';
 import { Controller } from 'react-hook-form';
 import { TouchableOpacity } from 'react-native';
 
-const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type, iconName, keyboardType}) => {
+const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type, iconName, keyboardType, editable}) => {
   
 
   return (
@@ -31,6 +31,7 @@ const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type
                 style={styles.input}
                 secureTextEntry = {secureTextEntry}
                 keyboardType={keyboardType}
+                editable={editable}
               />
        
             </View>

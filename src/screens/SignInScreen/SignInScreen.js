@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator,Dimensions } from 'react-native'
-import React,{ useState} from 'react'
+import React,{ useEffect, useState} from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignButtons from '../../components/SocialSignButtons'
@@ -7,27 +7,40 @@ import { EMAIL_REGEX } from '../../components/Regex/Regex'
 import { useForm } from 'react-hook-form'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import CustomPasswordInput from '../../components/CustomPasswordInput/CustomPasswordInput'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const auth = getAuth();
 const SignInScreen = ({navigation}) => {
   const {control, handleSubmit,setError, formState: {errors}} = useForm();
   const [loading, setLoading ] = useState(false);
  
+  useEffect(()=>{
+    deleteData()
+  },[])
+  const deleteData = async() =>{
+    await AsyncStorage.clear()
+    console.log('Clear the asyncData')
+  }
 
   const onLoginPressed = async (data) => {  
     setLoading(true)
     try {      
       const userCredential = await signInWithEmailAndPassword( auth ,data.email, data.password)
       const user = userCredential.user;
+      const userStringify = JSON.stringify(user)
       if(user){
-        console.log(user)
+        try {
+          await AsyncStorage.setItem('User', userStringify)
+        } catch (error) {
+          console.log(error)
+        }
         setLoading(false) 
         if (!user.emailVerified) {
           navigation.navigate('EmailVerify')
           console.log('User is not verified');
         } else {
           // User is verified, proceed to the app
+          navigation.navigate('Maintab');
           console.log('User is verified');
         }
       }

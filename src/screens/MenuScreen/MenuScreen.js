@@ -16,6 +16,7 @@ const MenuScreen = ({navigation}) => {
   const [selectedCategory, setSelectedCategory] = useState('Appetizer');
   const [filteredMenuItems, isLoading] = useMenuItems(selectedCategory);
   const [selectedItem, setSelectedItem ] = useState();
+  const [addToCart, setAddToCart ] = useState(false);
  
   const orderItem = async (userId, quantity, menuItemId) => {
     try {
@@ -39,7 +40,7 @@ const MenuScreen = ({navigation}) => {
         </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, addToCart]);
 
   //toggleDIalog box
   const toggleDialog = (item) => {
@@ -49,6 +50,7 @@ const MenuScreen = ({navigation}) => {
 
   const handleAddToCart = async (item) => {
     try {
+      if(user != undefined){
       const orderItemData = await orderItem(user.uid, 1, item.id);
       toast.show(`${item.name} Added to cart!`, {
         type: "success",
@@ -57,6 +59,10 @@ const MenuScreen = ({navigation}) => {
         offset: 100,
         animationType: "slide-in"
       });
+      setAddToCart(!addToCart);
+    } else {
+      navigation.navigate('MainAuthTab');
+    }
     } catch (error) {
       console.error(error);
     }
@@ -79,7 +85,7 @@ const MenuScreen = ({navigation}) => {
         <View style={styles.imageContainer}>
           <Image
             resizeMode='cover'
-            style={styles.image}
+            style={styles.image} 
             source={{uri:item.imgUrl}}
           />
         </View>   

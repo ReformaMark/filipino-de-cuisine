@@ -38,6 +38,7 @@ const SignUpScreen = ({navigation}) => {
         })
         reset();
         console.log("Email verification link has been sent")
+       
       })
       .catch(error => {
         if(error.code === 'auth/email-already-in-use'){
@@ -46,6 +47,7 @@ const SignUpScreen = ({navigation}) => {
             type: error.code,
             message: "Email already in used"
           })
+          return
         }
       }); 
     } catch (err) {

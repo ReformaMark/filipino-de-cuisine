@@ -9,7 +9,7 @@ import { EMAIL_REGEX } from '../../components/Regex/Regex';
 import CustomButton from '../../components/CustomButton/CustomButton';
 
 
-const ForgotPasswordScreen = () => {
+const ForgotPasswordScreen = ({navigation}) => {
   const auth = getAuth();
   const {control, handleSubmit,setError, formState: {errors}} = useForm();
   const [message, setMessage] = useState('');
@@ -67,9 +67,16 @@ const ForgotPasswordScreen = () => {
         />
         <View style={styles.input}>
           <CustomButton 
-            text="send"
+            text="Send"
             onPress={handleSubmit(handleSendPasswordReset)}     
           />
+          <View style={{marginTop: 20,}}>
+            <CustomButton 
+              text="Login"
+              onPress={()=>navigation.navigate('Sign In')}     
+            />
+          </View>
+          
         </View>
         <Dialog 
           isVisible={visible}

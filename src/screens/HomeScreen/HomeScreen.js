@@ -1,7 +1,7 @@
-import React,{useContext} from 'react';
+import React,{useEffect} from 'react';
 import { StyleSheet, Text, View,ScrollView, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { useForm } from 'react-hook-form'
-import StarRating from 'react-native-star-rating';
+import { useAuthentication } from '../../hooks/useAuthentication';
 import CartIcon from '../../components/CartIcon';
 import CustomInput  from '../../components/CustomInput'
 import Logo from '../../components/Logo';
@@ -9,12 +9,28 @@ import CrispyPata from './images/CrispyPata.png'
 import Veggies from './images/Veggies.png'
 import Foods from './images/Food.png'
 import { Dimensions } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen({ navigation }) {
 
   const {width} = useWindowDimensions(); 
   const {control, handleSubmit,setError, formState: {errors}} = useForm();
 
+  useEffect(()=>{
+    getData()
+  },[])
+  const getData = ()=>{
+    try {
+      AsyncStorage.getItem('User')
+        .then((value)=>{
+          if(value != null){
+            console.log(value)
+          }
+        })
+    } catch (error) {
+      
+    }
+  } 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor:'white'}} >  
       <View style={styles.searchAndIconContainer}>
@@ -27,6 +43,7 @@ export default function HomeScreen({ navigation }) {
           />          
         </View>
         <CartIcon/>
+        
       </View>
       <Logo/>
 
@@ -39,15 +56,7 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.leftContainer}>
               <Text style={styles.ratings}>Ratings&Reviews</Text>
               <View style={styles.starContainer}>
-                <StarRating
-                  disabled={true}  // disable the ability to change the rating
-                  maxStars={5}     // maximum number of stars
-                  rating={4.5}       // current rating
-                  starSize={25}    // size of the stars
-                  fullStarColor={'#f5c900'}
-                  emptyStarColor={'black'}
-                  
-                />
+                
               </View>
               <View style={styles.imageContainer}>
                 <Image source={Veggies}/>

@@ -7,14 +7,18 @@ import { app } from '../../../config/firebaseConfig';
 import HeaderImage from './images/accountHeader.png';
 import DefaultImage from './images/default.png';
 import { Icon } from '@rneui/themed';
+import { useEffect } from 'react';
+import CustomButton from '../../components/CustomButton/CustomButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen({ navigation }) {
 
   const { user } = useAuthentication();
-
+ 
   const auth = getAuth(app)
   const handleSignOut = () => {
     if (user) {
+      deleteData()
       signOut(auth)
       .then(() => {
         console.log("Successfully signed out");
@@ -25,8 +29,18 @@ export default function ProfileScreen({ navigation }) {
     }
   };
 
+  const deleteData = async() =>{
+    try {
+      await AsyncStorage.removeItem('User')
+      console.log("Success delete")
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
   <View style={styles.container}>
+    {user != undefined ?
+    <>
     <View style={styles.header}>
       <Image 
         source={HeaderImage}
@@ -69,7 +83,7 @@ export default function ProfileScreen({ navigation }) {
           type='font-awesome'
           size={30}
         />
-        <TouchableOpacity style={ styles.orderTransaction}>
+        <TouchableOpacity style={ styles.orderTransaction} onPress={()=> navigation.navigate('OrderTransactionScreen')}>
           <Text style={styles.transactionText}>Order Transaction</Text>
         </TouchableOpacity>
       </View>
@@ -102,8 +116,23 @@ export default function ProfileScreen({ navigation }) {
         <Text style={styles.logoutText}>Log out</Text>
       </TouchableOpacity>
     </View>
+    </> :
+    <>
+      <View style={{flex: 1, justifyContent:'center', padding: 30,}}>
+        <Text style={{fontSize: 15, fontWeight:'700', marginBottom: 20,}}>Please Login to enjoy using our app</Text>
+        <View>
+          <CustomButton         
+            text="Login"
+            onPress={() => navigation.navigate('MainAuthTab')}      
+        
+          />
+        </View>
+        
+      </View>
+    </>
+    }
   </View>
- 
+
   );
 }
 

@@ -10,7 +10,13 @@ export default function CartIcon() {
   const navigation = useNavigation();
   const [orderItem, setOrderItem] = useState([]);
   const [cartItemsCount, setCartItemsCount] = useState(0);
-
+  const [cartUpdated, setCartUpdated] = useState(false);
+  const userUid = user;
+  let userId;
+  if(userUid != undefined){
+    console.log(userUid.uid)
+    userId = userUid.uid
+}
   useEffect(() => {
     const fetchOrderItem = async () => {
       try {
@@ -22,15 +28,25 @@ export default function CartIcon() {
     };
 
     fetchOrderItem();
-  }, []);
+  }, [navigation]);
 
   useEffect(() => {
-    const filteredOrderItems = orderItem.filter((item) => item.userId === user.uid).length;
+    const unsubscribe = navigation.addListener('focus', () => {
+      setCartUpdated((prev) => !prev); // toggle the state value
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    const filteredOrderItems = orderItem.filter((item) => item.userId === userId && item.orderId == null).length;
     setCartItemsCount(filteredOrderItems);
   }, [orderItem]);
 
   return (
     <View style={styles.container}>
+      {user != undefined ?
+      <>
       <Icon
         name='shopping-cart'
         type='font-awesome'
@@ -46,6 +62,25 @@ export default function CartIcon() {
           <Text style={styles.badgeText}>{cartItemsCount}</Text>
         </View>
       )}
+    </> :
+    <>
+      <Icon
+      name='shopping-cart'
+      type='font-awesome'
+      color='#342006'
+      size={35}
+      onPress={() => {
+        // navigate to cart screen
+        navigation.navigate('MainAuthTab')
+      }}
+    />
+    {cartItemsCount > 0 && (
+      <View style={styles.badge}>
+        <Text style={styles.badgeText}>{cartItemsCount}</Text>
+      </View>
+    )}
+    </>
+}
     </View>
   );
 }

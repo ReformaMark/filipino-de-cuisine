@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View, Image } from 'react-native'
+import { Dimensions, StyleSheet, Text, View, Image, WebView } from 'react-native'
 import React,{useEffect, useState} from 'react';
 import { Icon } from 'react-native-elements';
 import {useForm} from 'react-hook-form'
@@ -7,12 +7,12 @@ import { useAuthentication } from '../../hooks/useAuthentication';
 import axios from 'axios';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import CustomInput from '../../components/CustomInput/CustomInput';
-import { colors } from '../../global/styles';
-
 
 const CartScreen = ({ navigation }) => {
   const { user } = useAuthentication();
   const [orderItem, setOrderItem] = useState([]);
+  const [items, setItems] = useState([]);
+  const [isdelete , setIsDelete ] = useState(false);
   const [quantity , setQuantity] = useState();
   const {control, handleSubmit,setError,reset, watch} = useForm();
   // fetch the cartItems of the Current User
@@ -27,13 +27,21 @@ const CartScreen = ({ navigation }) => {
     };
 
     fetchOrderItem();
-  }, [quantity]);
+  }, [quantity, isdelete]);
 
-  const filteredOrderItems = orderItem.filter((item) => item.userId === user.uid);
+  const filteredOrderItems = orderItem.filter((item) => item.userId === user.uid && item.orderId == null)
+  const itemCount = orderItem.filter((item) => item.userId === user.uid && item.orderId == null).length
+ 
+  useEffect(()=>{
+    setItems(filteredOrderItems)
+  },[orderItem])
+   
+console.log(items);
+  console.log(items)
+
   const subTotal = filteredOrderItems.reduce((total, item) => total + parseFloat(item.price), 0);
 
   const deliveryFee = 49;
-
   const totalPrice = subTotal + deliveryFee;
   async function handleAddBtn(itemId, currentQuantity) {
     const updatedQuantity = currentQuantity + 1;
@@ -78,35 +86,58 @@ const CartScreen = ({ navigation }) => {
     setQuantity(() => currentQuantity - 1)
   };
 
-  console.log(orderItem)
+  
+  const handleDeleteBtn = async (itemId) => {
+    try {
+      await axios.delete(
+        `http://192.168.100.18:3000/api/orderitem/${itemId}`
+      )
+
+     
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteBtnPress = (itemId) => {
+    handleDeleteBtn(itemId);
+    setIsDelete(!isdelete);
+  }
+
   return (
     <View style={styles.root}>
-      {orderItem === null ? 
+      {itemCount === 0  ? (
         <View style={styles.container}>
           <Text style={styles.text}>Your cart is empty</Text>
-          <View style={styles.addSomething}>
-            <Text style={styles.textAdd} onPress={()=> navigation.navigate('MenuScreen')}>Add something</Text>
+          <TouchableOpacity style={styles.addSomething} onPress={()=> navigation.navigate('MainTab')}>
+            <Text style={styles.textAdd} >Add something</Text>
             <Icon 
               name='add-circle-outline'
               color='rgba(24, 24, 24, 1)'       
             />          
-          </View>
+          </TouchableOpacity>
         </View>
+      )
         :
         <>
         <View style={styles.orderItemContainer}>
           <ScrollView showsVerticalScrollIndicator={true} >
             {filteredOrderItems.map((item) => (
             <View key={item.id} style={styles.itemContainer}>
-              <View >
-                <Image source={Breakfast} style={styles.imageContainer}/>
-              </View>
+              <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDeleteBtnPress(item.id)}>
+                <Icon
+                  name='trash-2'
+                  type='feather'
+                />
+              </TouchableOpacity>
+              <View style={styles.imageContainer}>
+                <Image
+                  resizeMode='cover'
+                  style={styles.image}
+                  source={{uri:item.menuItem.imgUrl}}
+                />
+              </View>  
               <View style={styles.TextContainer}>
-                <View style={styles.xBtn}>
-                  <TouchableOpacity>
-                    <Text>x</Text>
-                  </TouchableOpacity>
-                </View>
                 <View style={styles.namePriceContainer}>
                   <Text style={styles.name}>{item.menuItem.name}</Text>
                   <Text style={styles.price}>₱ {item.price}</Text>
@@ -150,7 +181,7 @@ const CartScreen = ({ navigation }) => {
           <Text style={styles.totalPrice}>Total Price: ₱ {totalPrice}</Text>
         </View>
    
-          <TouchableOpacity style={styles.checkoutBtn}>
+          <TouchableOpacity style={styles.checkoutBtn} onPress={()=> navigation.navigate('CheckoutScreen')}>
             <Text style={{color:'white'}}>Check Out</Text>
             <Icon 
               name='cart-plus'
@@ -190,7 +221,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     textAlign: 'center',
     color: 'rgba(128, 128, 128, 0.87)',
-    fontSize: 24,
+    fontSize: 22,
   },
   addSomething:{
     flexDirection: 'row',
@@ -211,10 +242,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
-  imageContainer:{
-    borderRadius: 150,
-    width: Dimensions.get('screen').width * 0.2,
-    height: 75,
+  deleteBtn:{
+    height: '100%',
+    backgroundColor: 'rgba(220, 38, 38, 0.8)',
+    width: 50,
+    justifyContent:'center',
+    marginLeft: -20,
+  },
+  image:{
+    width: 65,
+    height: 65,
+    borderRadius: 1000,
   },
   namePriceContainer:{
     flexDirection: 'row',
@@ -222,7 +260,7 @@ const styles = StyleSheet.create({
   name:{
     fontSize: 10,
     fontWeight: '700',
-    width: Dimensions.get('screen').width * 0.40,
+    width: Dimensions.get('screen').width * 0.30,
   },
   price:{
     fontSize: 10,
