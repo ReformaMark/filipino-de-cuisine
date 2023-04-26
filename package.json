@@ -13,6 +13,7 @@
     "@expo-google-fonts/inter": "^0.2.3",
     "@prisma/client": "^4.11.0",
     "@react-native-async-storage/async-storage": "1.17.11",
+    "@react-native-community/datetimepicker": "6.7.3",
     "@react-native-google-signin/google-signin": "^9.0.2",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/material-top-tabs": "^6.6.2",
@@ -41,10 +42,10 @@
     "react-native-elements": "^3.4.3",
     "react-native-flash-message": "^0.4.1",
     "react-native-star-rating": "^1.1.0",
+    "react-native-step-indicator": "^1.0.3",
     "react-native-toast-notifications": "^3.3.1",
     "react-native-viewpager": "^0.2.13",
-    "react-native-webview": "^12.0.2",
-    "@react-native-community/datetimepicker": "6.7.3"
+    "react-native-webview": "^12.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

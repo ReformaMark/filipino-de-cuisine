@@ -20,9 +20,10 @@ const EmailVerificationScreen = ({navigation}) => {
   };
 
   const handleSendEmailVerify = (data) => {
-    sendEmailVerification(auth, data.email)
+    sendEmailVerification(data.email)
       .then(() => {
         setMessage('Go to your email to reset your password.');
+        console.log('send Successfully')
         console.log("pressed");
         toggleDialog1()
       })

@@ -155,7 +155,7 @@ const OrderTransactionScreen = ({navigation}) => {
                 <Text>Loading...</Text>}
             </View>
             <View style={styles.statusBtnContainer}>
-                <TouchableOpacity style={{ borderBottomColor: allBtn ? '#10B981' : 'none', borderWidth: 2,  }} onPress={handleAllBtnPressed}>
+                <TouchableOpacity style={{ borderBottomColor: allBtn ? '#10B981' : 'none',  }} onPress={handleAllBtnPressed}>
                     <Text style={styles.btnText}>All</Text>
                 </TouchableOpacity >
                 <TouchableOpacity onPress={handlePendingBtnPressed}>

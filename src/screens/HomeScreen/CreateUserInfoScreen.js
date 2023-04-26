@@ -18,9 +18,10 @@ const CreateUserInfoScreen = ({navigation}) => {
     const [user, setUser ] = useState();
     const [loading, setLoading ] = useState(true);
     const [isRendered, setIsRendered] = useState(true);
-    const [customer, setCustomer] = useState()
+    const [customer, setCustomer] = useState();
    
     const getData = () =>{
+        
         try {
             AsyncStorage.getItem('User')
             .then(value => {

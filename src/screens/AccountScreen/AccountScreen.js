@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 export default function ProfileScreen({ navigation }) {
 
   const { user } = useAuthentication();
@@ -28,6 +29,7 @@ export default function ProfileScreen({ navigation }) {
       });
     }
   };
+  
 
   const deleteData = async() =>{
     try {
