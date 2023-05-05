@@ -1,16 +1,16 @@
-import { Dimensions, StyleSheet, Text, View, Image, WebView } from 'react-native'
+import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React,{useEffect, useState} from 'react';
 import { Icon } from 'react-native-elements';
 import {useForm} from 'react-hook-form'
 import Breakfast from '../MenuScreen/images/breakfast.png';
 import { useAuthentication } from '../../hooks/useAuthentication';
 import axios from 'axios';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import CustomInput from '../../components/CustomInput/CustomInput';
 
 const CartScreen = ({ navigation }) => {
   const { user } = useAuthentication();
-  const [orderItem, setOrderItem] = useState([]);
+  const [basketItem, setBasketItem] = useState([]);
   const [items, setItems] = useState([]);
   const [isdelete , setIsDelete ] = useState(false);
   const [quantity , setQuantity] = useState();
@@ -19,8 +19,16 @@ const CartScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchOrderItem = async () => {
       try {
-        const response = await axios.get('http://192.168.100.18:3000/api/orderItem');
-        setOrderItem(response.data);
+        const response = await axios.get('http://192.168.100.18:3000/api/basketItem')
+        .then((response)=>{
+          console.log(response.data)
+          setBasketItem(response.data)
+        })
+        .catch((error)=>{
+          console.log(error)
+        })
+        
+       
       } catch (error) {
         console.log(error);
       }
@@ -29,26 +37,25 @@ const CartScreen = ({ navigation }) => {
     fetchOrderItem();
   }, [quantity, isdelete]);
 
-  const filteredOrderItems = orderItem.filter((item) => item.userId === user.uid && item.orderId == null)
-  const itemCount = orderItem.filter((item) => item.userId === user.uid && item.orderId == null).length
+  const filteredBasketItems = basketItem.filter((item) => item.customerId === user.uid)
+  const itemCount = basketItem.filter((item) => item.customerId === user.uid).length
  
   useEffect(()=>{
-    setItems(filteredOrderItems)
-  },[orderItem])
+    setItems(filteredBasketItems)
+  },[totalPrice,basketItem])
    
-console.log(items);
-  console.log(items)
 
-  const subTotal = filteredOrderItems.reduce((total, item) => total + parseFloat(item.price), 0);
-
+  const subTotal = filteredBasketItems.reduce((total, item) => total + parseFloat(item.menuItem.price * item.quantity), 0);
+console.log(subTotal)
   const deliveryFee = 49;
   const totalPrice = subTotal + deliveryFee;
+
   async function handleAddBtn(itemId, currentQuantity) {
     const updatedQuantity = currentQuantity + 1;
 
     try {
       await axios.put(
-        `http://192.168.100.18:3000/api/orderitem/${itemId}`,
+        `http://192.168.100.18:3000/api/basketItem/${itemId}`,
         {
           quantity: updatedQuantity,
         }
@@ -65,7 +72,7 @@ console.log(items);
 
     try {
       await axios.put(
-        `http://192.168.100.18:3000/api/orderitem/${itemId}`,
+        `http://192.168.100.18:3000/api/basketItem/${itemId}`,
         {
           quantity: updatedQuantity,
         }
@@ -90,7 +97,7 @@ console.log(items);
   const handleDeleteBtn = async (itemId) => {
     try {
       await axios.delete(
-        `http://192.168.100.18:3000/api/orderitem/${itemId}`
+        `http://192.168.100.18:3000/api/basketItem/${itemId}`
       )
 
      
@@ -122,7 +129,7 @@ console.log(items);
         <>
         <View style={styles.orderItemContainer}>
           <ScrollView showsVerticalScrollIndicator={true} >
-            {filteredOrderItems.map((item) => (
+            {filteredBasketItems.map((item) => (
             <View key={item.id} style={styles.itemContainer}>
               <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDeleteBtnPress(item.id)}>
                 <Icon
@@ -140,7 +147,7 @@ console.log(items);
               <View style={styles.TextContainer}>
                 <View style={styles.namePriceContainer}>
                   <Text style={styles.name}>{item.menuItem.name}</Text>
-                  <Text style={styles.price}>₱ {item.price}</Text>
+                  <Text style={styles.price}>₱ {item.menuItem.price * item.quantity}</Text>
                 </View>
                 <View style={styles.quantityContainer}>
                   <Text style={styles.quantity}>Quantity:</Text>

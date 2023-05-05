@@ -13,6 +13,8 @@ import ReservationScreen from '../screens/ReservationScreen/ReservationScreen';
 import ProfileScreen from '../screens/AccountScreen/AccountScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import BestSellerScreen from '../screens/MenuScreen/BestSellerScreen';
+import CartIcon from '../components/CartIcon/CartIcon';
 
   const Tab = createMaterialTopTabNavigator();
   const BottomTab = createBottomTabNavigator();
@@ -38,6 +40,21 @@ import { AntDesign, MaterialIcons } from '@expo/vector-icons';
               headerTitle: 'Menu', // set the title
             }} 
         />
+         <MenuStack.Screen 
+          name="BestSellerScreen" 
+          component={BestSellerScreen} 
+          options={{
+            headerShown: true,
+            headerStatusBarHeight: 30,
+            headerTitleAlign: 'center', // center align the title
+            headerTitle: 'Menu', // set the title
+            headerRight: () => (
+              <View style={{ marginRight: 20, justifyContent:'center' }}>
+                <CartIcon />
+              </View>
+            ),
+          }} 
+      />
       </MenuStack.Navigator>
     );
   }

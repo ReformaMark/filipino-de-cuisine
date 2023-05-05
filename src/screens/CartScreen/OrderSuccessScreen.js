@@ -6,29 +6,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState } from 'react'
 import { useEffect } from 'react'
 
-const OrderSuccessScreen = ({navigation}) => {
+const OrderSuccessScreen = ({navigation, route}) => {
     const [recentOrderId, setResentOrderId] = useState();
-
-    useEffect(()=>{
-        getRecentOrderid()
-    },[])
-
-    const getRecentOrderid = async() =>{
-       await AsyncStorage.getItem('RecentOrderId')
-       .then(value =>{
-        if(value != null){
-            setResentOrderId(value)
-        }
-       }).catch(error => {
-
-       })
-    }
+    const { orderId } = route.params;
+  
 
     const handleViewOrderStatus = () =>{
-        navigation.navigate('OrderStatusScreen')
+        navigation.navigate('OrderStatusScreen', { id: orderId})
     }   
     const handleReturnToHomeScreen = () =>{
-        navigation.navigate('HomeScreen', { orderId: recentOrderId})
+        navigation.navigate('HomeScreen')
     }   
   return (
     <View style={styles.rootContainer}>

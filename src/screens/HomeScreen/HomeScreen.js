@@ -10,6 +10,7 @@ import Veggies from './images/Veggies.png'
 import Foods from './images/Food.png'
 import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AirbnbRating } from '@rneui/themed';
 
 export default function HomeScreen({ navigation }) {
 
@@ -56,7 +57,13 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.leftContainer}>
               <Text style={styles.ratings}>Ratings&Reviews</Text>
               <View style={styles.starContainer}>
-                
+              <AirbnbRating
+                count={5}
+                isDisabled={true}
+                showRating={false}
+                defaultRating={4}
+                size={20}
+              />
               </View>
               <View style={styles.imageContainer}>
                 <Image source={Veggies}/>
@@ -82,7 +89,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.orderNow}>Order Now</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btnPrimary}>
-            <Text onPress={() => navigation.navigate('Menu')} style={styles.bookReservation}>Book a Reservation</Text>
+            <Text onPress={() => navigation.navigate('Reservation')} style={styles.bookReservation}>Book a Reservation</Text>
           </TouchableOpacity>
         </View>
 

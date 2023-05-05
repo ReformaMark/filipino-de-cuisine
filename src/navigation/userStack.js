@@ -17,6 +17,15 @@ import PaymentStatusScreen from '../screens/CartScreen/PaymentStatusScreen';
 import OrderStatusScreen from '../screens/AccountScreen/OrderStatusScreen';
 import OrderSuccessScreen from '../screens/CartScreen/OrderSuccessScreen';
 import OrderTransactionScreen from '../screens/AccountScreen/OrderTransactionScreen';
+import BestSellerScreen from '../screens/MenuScreen/BestSellerScreen';
+import AboutUsScreen from '../screens/AccountScreen/AboutUsScreen';
+import ContactUsScreen from '../screens/AccountScreen/ContactUsScreen';
+import FeedbackScreen from '../screens/AccountScreen/FeedbackScreen';
+import PrivacyPolicyScreen from '../screens/AccountScreen/PrivacyPolicyScreen';
+import TermsServiceScreen from '../screens/AccountScreen/TermsServiceScreen';
+import { Image } from 'react-native';
+import EditCustomerInfoScreen from '../screens/CartScreen/EditCustomerInfoScreen';
+import RecieptScreen from '../screens/AccountScreen/RecieptScreen';
 
 
   const Stack = createStackNavigator();
@@ -39,6 +48,21 @@ import OrderTransactionScreen from '../screens/AccountScreen/OrderTransactionScr
         <MenuStack.Screen 
           name="MenuScreen" 
           component={MenuScreen} 
+          options={{
+            headerShown: true,
+            headerStatusBarHeight: 30,
+            headerTitleAlign: 'center', // center align the title
+            headerTitle: 'Menu', // set the title
+            headerRight: () => (
+              <View style={{ marginRight: 20, justifyContent:'center' }}>
+                <CartIcon />
+              </View>
+            ),
+          }} 
+      />
+        <MenuStack.Screen 
+          name="BestSellerScreen" 
+          component={BestSellerScreen} 
           options={{
             headerShown: true,
             headerStatusBarHeight: 30,
@@ -74,6 +98,7 @@ import OrderTransactionScreen from '../screens/AccountScreen/OrderTransactionScr
         <ProfileStack.Screen 
           name="OrderTransactionScreen" 
           component={OrderTransactionScreen}/>
+        
       </ProfileStack.Navigator>
     );
   }
@@ -186,7 +211,7 @@ import OrderTransactionScreen from '../screens/AccountScreen/OrderTransactionScr
             name="Cart"
             component={CartStackScreen}
             options={{ headerShown: false}} 
-          />
+          />          
           <Stack.Screen 
           name="OrderStatusScreen" 
           component={OrderStatusScreen}
@@ -195,6 +220,73 @@ import OrderTransactionScreen from '../screens/AccountScreen/OrderTransactionScr
             headerTitleAlign: 'center',
           }}
           />
+          <Stack.Screen 
+          name="RecieptScreen" 
+          component={RecieptScreen}
+          options={{ 
+            headerTitle: 'Reciept',
+            headerTitleAlign: 'center',
+          }}
+          />
+           <Stack.Screen 
+            name="EditCutomerInfoScreen" 
+            component={EditCustomerInfoScreen}
+            options={{ 
+              headerShown: false,
+            }} 
+          />
+          <Stack.Screen 
+          name="AboutUs" 
+          component={AboutUsScreen}
+          options={{ 
+            headerTitle: 'About Us',
+            headerTitleAlign: 'center',
+          }}
+          /> 
+         <Stack.Screen 
+          name="ContactUs" 
+          component={ContactUsScreen}
+          options={{ 
+            headerTitle: 'Contact Us',
+            headerTitleAlign: 'center',
+          }}
+          /> 
+         <Stack.Screen 
+          name="Feedback" 
+          component={FeedbackScreen}
+          options={{ 
+          
+            headerTitle: '',
+            headerBackground: () => (
+              <Image source={require('./images/image.png')} resizeMode='stretch' style={{width: '100%', height: 200}} />
+            ),
+            headerTitleAlign: 'center',
+            headerTintColor: 'white'
+          }}
+          /> 
+         <Stack.Screen 
+          name="PrivacyPolicy" 
+          component={PrivacyPolicyScreen}
+          options={{ 
+            headerTitle: '',
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: '#10B981'
+            }
+          }}
+          /> 
+         <Stack.Screen 
+          name="TermsService" 
+          component={TermsServiceScreen}
+          options={{ 
+            headerTitle: 'Terms & Conditions',
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: '#10B981'
+            },
+            headerTintColor: 'white'
+          }}
+          /> 
         </Stack.Navigator>
       </NavigationContainer>
       </ToastProvider>

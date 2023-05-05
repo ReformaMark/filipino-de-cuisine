@@ -53,14 +53,15 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(245, 245, 245, 1)',
       width: '100%',
       borderRadius: 10,
-      paddingHorizontal: 10,
-      paddingVertical: 5,
       marginVertical: 5,
     },
     input: {
      width: '100%',
      borderColor: colors.darkBrown,
-     padding: 5,
+     borderWidth: 1,
+     padding: 10,
+     borderRadius: 10,
+     backgroundColor: 'white'
     },
     icon:{
       position: 'absolute',

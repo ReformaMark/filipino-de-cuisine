@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAuthentication } from '../../hooks/useAuthentication';
 import { Button } from 'react-native-elements';
@@ -6,17 +6,27 @@ import { getAuth, signOut } from "firebase/auth";
 import { app } from '../../../config/firebaseConfig';
 import HeaderImage from './images/accountHeader.png';
 import DefaultImage from './images/default.png';
-import { Icon } from '@rneui/themed';
+import { Avatar, Icon, ListItem, Dialog } from '@rneui/themed';
 import { useEffect } from 'react';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FeedbackIcon from './images/feedback.png';
+import OrderHistoryIcon from './images/orderHistory.png';
+import reservationHistoryIcon from './images/reservationHistory.png';
+import { ScrollView } from 'react-native';
+import { color } from '@rneui/base';
 
 
 export default function ProfileScreen({ navigation }) {
-
+  const [visible, setVisible] = useState(false);
   const { user } = useAuthentication();
- 
+  const [expanded, setExpanded] = useState(false);
   const auth = getAuth(app)
+
+  const toggleDialog = () => {
+    setVisible(!visible);
+  };
+  
   const handleSignOut = () => {
     if (user) {
       deleteData()
@@ -40,7 +50,7 @@ export default function ProfileScreen({ navigation }) {
     }
   }
   return (
-  <View style={styles.container}>
+  <ScrollView style={styles.container}>
     {user != undefined ?
     <>
     <View style={styles.header}>
@@ -59,10 +69,12 @@ export default function ProfileScreen({ navigation }) {
     </View>
     <View style={styles.userInfoContainer}>
       <View >
-        <Image 
-          source={DefaultImage}
-          style={styles.userImageContainer}
-        />
+      <Avatar
+        size={65}
+        rounded
+        title={user.displayName.charAt(0)}
+        containerStyle={{ backgroundColor: '#3d4db7' }}
+      />
       </View>
       {user ? 
       <View >        
@@ -80,47 +92,103 @@ export default function ProfileScreen({ navigation }) {
     </View>
     <View>
       <View style={styles.list}>
-        <Icon 
-          name='list'
-          type='font-awesome'
-          size={30}
+        <Image
+          source={OrderHistoryIcon}
+          resizeMode='contain'
+          style={{width: 30, height:40}}
         />
         <TouchableOpacity style={ styles.orderTransaction} onPress={()=> navigation.navigate('OrderTransactionScreen')}>
           <Text style={styles.transactionText}>Order Transaction</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.list}>
-        <Icon 
-          name='list'
-          type='font-awesome'
-          size={30}
+        <Image
+          source={reservationHistoryIcon}
+          resizeMode='contain'
+          style={{width: 30, height:40, }}
         />
         <TouchableOpacity style={ styles.orderTransaction}>
           <Text style={styles.transactionText}>Reservation History</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.list}>
-        <Icon 
-          name='list'
-          type='font-awesome'
-          size={30}
+        <Image
+          source={FeedbackIcon}
+          resizeMode='contain'
+          style={{width: 30, height:40}}
         />
-        <TouchableOpacity style={ styles.orderTransaction}>
+        <TouchableOpacity style={ styles.orderTransaction} onPress={()=>navigation.navigate('Feedback')}>
           <Text style={styles.transactionText}>Send us FeedBack</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.list}>
-        <TouchableOpacity style={ styles.orderTransaction}>
-          <Text style={styles.transactionText}>More Settings</Text>
+      <View style={{width: '100%', paddingHorizontal: 40, marginTop: -30}}>
+        <ListItem.Accordion
+        containerStyle={{backgroundColor: 'transparent'}}
+        bottomDivider={true}
+        pad={140}
+        content={
+          <Text>More Settings</Text>
+        }
+        isExpanded={expanded}
+        onPress={() => {
+          setExpanded(!expanded);
+        }}
+      >
+        <TouchableOpacity onPress={()=>navigation.navigate('AboutUs')}>
+        <ListItem containerStyle={{backgroundColor: 'transparent', paddingLeft: 50}}>
+          <ListItem.Title >About Us</ListItem.Title>
+        </ListItem>
         </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('ContactUs')}>
+        <ListItem containerStyle={{backgroundColor: 'transparent', paddingLeft: 50}}>
+          <ListItem.Title >Contact Us</ListItem.Title>
+        </ListItem>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('PrivacyPolicy')}>
+        <ListItem containerStyle={{backgroundColor: 'transparent', paddingLeft: 50}}>
+          <ListItem.Title>Privacy Statement</ListItem.Title>
+        </ListItem>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('TermsService')}>
+        <ListItem containerStyle={{backgroundColor: 'transparent', paddingLeft: 50}}>
+          <ListItem.Title>Terms & Conditions</ListItem.Title>
+        </ListItem>
+        </TouchableOpacity>
+        
+      </ListItem.Accordion>
       </View>
-      <TouchableOpacity onPress={handleSignOut} style={styles.logoutTextContainer}>
+      <TouchableOpacity onPress={toggleDialog} style={styles.logoutTextContainer}>
+        <Icon 
+          name='log-out'
+          type='feather'
+          size={30}
+          color={'rgba(16, 185, 129, 1)'}
+        />
         <Text style={styles.logoutText}>Log out</Text>
+        
       </TouchableOpacity>
+      <Dialog
+          isVisible={visible}
+          onBackdropPress={toggleDialog}
+          style={{borderColor: 'black', borderWidth: 2, borderRadius: 100, padding: 30}}
+        >
+        <View style={{padding: 10}}>
+        <Dialog.Title title="Log out" />
+        <Text style={{ fontSize: 12, fontWeight: '500'}}>Are you sure you want to log out?</Text>
+        <View style={{flexDirection: 'row', marginTop: 60, justifyContent: 'space-between'}}>
+          <TouchableOpacity onPress={handleSignOut} style={{padding: 10, backgroundColor: '#10B981', width: 90,borderRadius: 30}}>
+            <Text style={{textAlign:'center', fontSize: 15, fontWeight: '500', color: 'white'}}>Yes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toggleDialog} style={{padding: 10, backgroundColor: '#10B981', width: 90, borderRadius: 30}}>
+            <Text style={{textAlign:'center', fontSize: 15, fontWeight: '500', color: 'white'}}>No</Text>
+          </TouchableOpacity>
+        </View>
+        </View>
+        </Dialog>
     </View>
     </> :
-    <>
-      <View style={{flex: 1, justifyContent:'center', padding: 30,}}>
+   
+      <View style={{flex: 1, justifyContent:'center', padding: 30, marginTop: 300}}>
         <Text style={{fontSize: 15, fontWeight:'700', marginBottom: 20,}}>Please Login to enjoy using our app</Text>
         <View>
           <CustomButton         
@@ -129,11 +197,10 @@ export default function ProfileScreen({ navigation }) {
         
           />
         </View>
-        
       </View>
-    </>
+
     }
-  </View>
+  </ScrollView>
 
   );
 }
@@ -214,8 +281,14 @@ const styles = StyleSheet.create({
   logoutText:{
     fontSize: 18,
     fontWeight: '400',
+    marginHorizontal: 30,
+    color: 'rgba(16, 185, 129, 1)',
   },
   logoutTextContainer:{
-    marginLeft: 30,
+    marginVertical: 30,
+    paddingBottom: 20, 
+    alignItems:'center',
+    marginLeft: 20,
+    flexDirection: 'row'
   },
 });

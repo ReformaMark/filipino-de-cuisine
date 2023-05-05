@@ -23,7 +23,8 @@ export default {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.immarkreforma.filipinodecuisine",
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,6 +37,7 @@ export default {
       firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.FIREBASE_APP_ID,
       firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID,
+     
     }
   }
 }

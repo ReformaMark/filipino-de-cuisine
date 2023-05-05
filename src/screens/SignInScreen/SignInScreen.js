@@ -76,7 +76,7 @@ const SignInScreen = ({navigation}) => {
   }
   
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: 'white'}}>    
+    <ScrollView showsVerticalScrollIndicator={false} style={{}}>    
     {loading && 
          <ActivityIndicator size={100 || 'large'} color="#10B981" style={[styles.loading]} />    
       }   
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     marginTop: 30,
-    backgroundColor: 'white',
+   
   },
   loading:{
     position: 'absolute',

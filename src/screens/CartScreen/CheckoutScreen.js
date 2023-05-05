@@ -1,10 +1,10 @@
-import { Dimensions, StyleSheet, Text, View, Image} from 'react-native'
+import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'
 import React,{useEffect, useState} from 'react';
 import { Icon } from 'react-native-elements';
-import {useForm} from 'react-hook-form'
+import { useForm} from 'react-hook-form'
 import Breakfast from '../MenuScreen/images/breakfast.png';
 import axios from 'axios';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { colors } from '../../global/styles';
 import { CheckBox, Dialog } from '@rneui/themed';
@@ -12,14 +12,18 @@ import * as WeBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator } from 'react-native';
+import CustomButton from '../../components/CustomButton/CustomButton';
 
 const CheckoutScreen = ({ navigation }) => {
-  const [orderItem, setOrderItem] = useState([]);
+  const [basketItem, setBasketItem] = useState([]);
   const [quantity , setQuantity] = useState();
   const {control, handleSubmit,setError,reset, watch} = useForm();
   const [checkGCASH, setCheckGCASH] = useState(false);
   const [checkMaya, setCheckMaya] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [address, setAddress] = useState('');
+  const [contact, setContact] = useState('');
   const [ paymentMethodError , setPaymentMethodError] = useState(false)
   const [visible, setVisible] = useState(false);
   const [user, setUser ] = useState();
@@ -39,6 +43,7 @@ useEffect(()=>{
       .then((res)=>{
         console.log(res.data)
         setCustomer(res.data)
+        setCustomerInfoToState()
       }).catch((error)=>{
           console.log(error);
         
@@ -49,6 +54,14 @@ useEffect(()=>{
   }
   CheckUserId();
 },[user])
+
+
+const setCustomerInfoToState = ()=>{
+  setDisplayName(user.displayName)
+  setContact(customer.defaultContactNumber)
+  setAddress(customer.defaultAddress)
+}
+
 
 useEffect(() => {
   const timeoutId = setTimeout(() => {
@@ -87,8 +100,8 @@ const getData = () =>{
   useEffect(() => {
     const fetchOrderItem = async () => {
       try {
-        const response = await axios.get('http://192.168.100.18:3000/api/orderItem');
-        setOrderItem(response.data);
+        const response = await axios.get('http://192.168.100.18:3000/api/basketItem');
+        setBasketItem(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -97,8 +110,8 @@ const getData = () =>{
     fetchOrderItem();
   }, [quantity]);
 
-  const filteredOrderItems = orderItem.filter((item) => item.userId === user.uid && item.orderId == null);
-  const subTotal = filteredOrderItems.reduce((total, item) => total + parseFloat(item.price), 0);
+  const filteredOrderItems = basketItem.filter((item) => item.customerId === user.uid );
+  const subTotal = filteredOrderItems.reduce((total, item) => total + parseFloat(item.menuItem.price * item.quantity), 0);
 
   const deliveryFee = 49;
 
@@ -158,7 +171,8 @@ const getData = () =>{
             Linking.openURL(res.data.attributes.next_action.redirect.url)
             navigation.reset({
               index: 0,
-              routes: [{ name: 'PaymentStatusScreen' }],
+              routes: [{ name: 'PaymentStatusScreen', params: { displayName:displayName, contact:contact, address:address } }],
+  
             });
           })
         })
@@ -168,14 +182,15 @@ const getData = () =>{
   }
 
   const toggleDialog = () => {
-    if(paymentMethod === ''){
-      setPaymentMethodError(true);
-    } else {
-      setVisible(!visible);
-      console.log('pressed')
-    }
-    
+   setVisible(!visible)
   };
+
+  const handleEditAddress = (data)=>{
+    setAddress(data.address)
+    setContact(data.phoneNumber)
+    setDisplayName(data.name)
+    toggleDialog()
+  }
   return (
     <>
     {loading ? (
@@ -188,16 +203,60 @@ const getData = () =>{
       <View style={styles.customerInfoContainer}>
         <View style={{flexDirection:'row', justifyContent:'space-between'}}>
           <Text style={{fontSize: 15, fontWeight: '700'}}>Delivery Address</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={toggleDialog}>
             <Text style={{fontSize: 15, fontWeight: '700'}}>Edit</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.customerInfo}>
-          <Text style={{fontSize: 12, fontWeight: '400'}}>Name: {user.displayName}</Text>
-          <Text style={{fontSize: 12, fontWeight: '400'}}>Contact No: {customer.defaultContactNumber}</Text>
-          <Text style={{fontSize: 12, fontWeight: '400'}}>Address: {customer.defaultAddress}</Text>
+          <Text style={{fontSize: 12, fontWeight: '400'}}>Name: {displayName}</Text>
+          <Text style={{fontSize: 12, fontWeight: '400'}}>Contact No: {contact}</Text>
+          <Text style={{fontSize: 12, fontWeight: '400'}}>Address: {address}</Text>
         </View>
       </View>
+      <Dialog
+          isVisible={visible}
+          onBackdropPress={toggleDialog}
+          style={{borderColor: 'black', borderWidth: 2, borderRadius: 100, padding: 30}}
+        >
+        <View style={{padding: 10}}>
+        <Dialog.Title title="Edit Address" />
+        <Text style={styles.label}>Name</Text>
+            <CustomInput 
+                name="name"          
+                placeholder="name" 
+                control={control}
+                rules={{
+                required: "Name is required"
+                }}
+            />
+            <Text style={styles.label}>Contact Nnumber</Text>
+            <CustomInput 
+                name='phoneNumber'
+                control={control}     
+                placeholder="Phone number"
+                keyboardType='numeric'
+                rules={{
+                    required: "Phone number is required", 
+                    minLength: {value: 11, message: "Please enter a valid phone number."}
+                }}            
+            />
+            <Text style={styles.label}>Address</Text>
+            <CustomInput 
+                name="address"          
+                placeholder="Address" 
+                control={control}
+                rules={{
+                required: "Address is required"
+                }}
+            />
+          <View style={{marginVertical: 20}}>
+           <CustomButton 
+            text='Submit'
+            onPress={handleSubmit(handleEditAddress)}
+           />
+        </View>
+        </View>
+        </Dialog>
       <View style={[styles.orderItemContainer, { maxHeight: Dimensions.get('screen').height * 0.28 }]} >
         <ScrollView showsVerticalScrollIndicator={true}  >
           {filteredOrderItems.map((item) => (
@@ -212,7 +271,7 @@ const getData = () =>{
             <View style={styles.TextContainer}>
               <View style={styles.namePriceContainer}>
                 <Text style={styles.name}>{item.menuItem.name}</Text>
-                <Text style={styles.price}>₱ {item.price}</Text>
+                <Text style={styles.price}>₱ {item.menuItem.price * item.quantity}</Text>
               </View>
               <View style={styles.quantityContainer}>
                 <Text style={styles.quantity}>Quantity:</Text>
@@ -300,6 +359,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get('screen').width,
     alignItems:'center',
     paddingHorizontal: 20,
+  },
+  label:{
+    marginTop: 10,
   },
   orderItemContainer:{
     marginBottom: 10,

@@ -8,6 +8,7 @@ import useMenuItems from '../../hooks/useMenuItems';
 import axios from 'axios';
 import { useAuthentication } from '../../hooks/useAuthentication';
 import { useToast } from "react-native-toast-notifications";
+import { RefreshControl } from 'react-native';
 
 const MenuScreen = ({navigation}) => {
   const toast = useToast();
@@ -17,10 +18,20 @@ const MenuScreen = ({navigation}) => {
   const [filteredMenuItems, isLoading] = useMenuItems(selectedCategory);
   const [selectedItem, setSelectedItem ] = useState();
   const [addToCart, setAddToCart ] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const onRefresh = () => {
+    setRefresh(true);
  
+    setTimeout(()=>{
+      setRefresh(false)
+
+    }, 1000)
+  };
+
   const orderItem = async (userId, quantity, menuItemId) => {
     try {
-      const response = await axios.post('http://192.168.100.18:3000/api/orderItem', { userId, quantity, menuItemId });
+      const response = await axios.post('http://192.168.100.18:3000/api/basketItem', { userId, quantity, menuItemId });
       return response.data;
     } catch (error) {
       console.error(error);
@@ -28,9 +39,7 @@ const MenuScreen = ({navigation}) => {
     }
   };
  
-  useEffect(() => {
-    
-  }, []);
+
   //set icon to the right of the header navbar
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,7 +49,7 @@ const MenuScreen = ({navigation}) => {
         </View>
       ),
     });
-  }, [navigation, addToCart]);
+  }, [navigation, addToCart, refresh]);
 
   //toggleDIalog box
   const toggleDialog = (item) => {
@@ -105,7 +114,14 @@ const MenuScreen = ({navigation}) => {
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView refreshControl={
+      <RefreshControl
+        refreshing={refresh} 
+        onRefresh={onRefresh}
+      />     
+    }
+    style={styles.root}
+    >
       <View>       
         <Image
           source={HeaderImage}
@@ -134,7 +150,7 @@ const MenuScreen = ({navigation}) => {
       </View>
       <View style={styles.categoryBestSellerTextContainer}>
         <Text style={styles.categoryText}>{selectedCategory}</Text>
-        <TouchableOpacity onPress={()=>{}}>
+        <TouchableOpacity onPress={()=>{navigation.navigate('BestSellerScreen', {selectedCategory: selectedCategory, filteredMenuItems: filteredMenuItems })}}>
           <Text style={[styles.categoryText,styles.bestsellerText]}>Best Seller</Text>
         </TouchableOpacity>
         
@@ -165,7 +181,7 @@ const MenuScreen = ({navigation}) => {
           </TouchableOpacity>
       </Dialog>
       }
-    </View>
+    </ScrollView>
   )
 }
 
@@ -177,7 +193,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').height,
   },
   scrollView:{
-    marginBottom: 180,
+
   },
   categoryBestSellerTextContainer:{
     flexDirection: 'row',

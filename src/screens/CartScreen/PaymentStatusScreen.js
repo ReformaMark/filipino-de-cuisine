@@ -5,7 +5,8 @@ import axios from 'axios';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { CheckBox, Icon } from '@rneui/themed';
 import * as Linking from 'expo-linking';
-const PaymentStatusScreen = ({navigation}) => {
+const PaymentStatusScreen = ({navigation, route}) => {
+  const {displayName, contact, address} = route.params;
   const [loading, setLoading ] = useState(true);
   const [getStatus, setGetStatus ] = useState(false);
   const [isGettingData, setIsGettingData ] = useState(false);
@@ -14,6 +15,7 @@ const PaymentStatusScreen = ({navigation}) => {
   const [user, setUser ] = useState();
   const [ succeeded , setSucceeded] = useState(false);
   const [isRendered, setIsRendered] = useState(true);
+  const [orderId, setOrderId] = useState(0);
 
 
 
@@ -82,51 +84,33 @@ const PaymentStatusScreen = ({navigation}) => {
     CheckUserId();
   },[user])
 
-  const getUser = async() =>{
-    try {
-       await AsyncStorage.getItem('User')
-        .then(value => {
-        if(value != null){
-            const userParse = JSON.parse(value)
-            setUser(userParse)
-        } else {
-          console.log(value)
-        }
-    }).catch(error =>{
-        console.log(error)
-    })
-    } catch (error) {
-        console.log(error)
-    }
-  }
+  
 
   useEffect(() => {
     const getPaymentIntentStatus = async() =>{
       await axios.get(`http://192.168.100.18:3000/api/payment_intents/`)
         .then(response => {
-          console.log(`This is from get payment intent status function: ${response.data}`)
-          if(response.data === 'succeeded'){
+          const {paymentIntentId, paymentStatus} = response.data;
+          console.log(`This is from get payment intent status function: ${paymentStatus}`)
+          if(paymentStatus === 'succeeded'){
+            
             axios.post('http://192.168.100.18:3000/api/order', 
             {
-              customerName: user.displayName, 
+              customerName: displayName, 
               customerId: customer.id, 
-              address: customer.defaultAddress,
-              contactNumber: customer.defaultContactNumber,
+              address: address,
+              contactNumber: contact,
               deliveryFee: "49.00",
-              userId: user.uid
+              customerId: user.uid,
+              paymentIntentId: paymentIntentId
             }).then(result => {
-              console.log(result.data)
-              try {
-                AsyncStorage.setItem('RecentOrderId', JSON.stringify(result.data.id))
-                console.log(`Successfully save: order Id`)
-              } catch (error) {
-                console.log(error)
-              }
+              console.log(result.data.id)
+              setOrderId(result.data.id)
             }).catch(error=>{
               console.log(error)
             })
           }
-          setStatus(response.data)
+          setStatus(paymentStatus)
         })
         .catch(error=>{
           console.log(`Error from get payment intent status function: ${error}`)
@@ -137,7 +121,7 @@ const PaymentStatusScreen = ({navigation}) => {
 
   
   const handlePaymentSuccess = () =>{
-    navigation.navigate('OrderSuccessScreen')
+    navigation.navigate('OrderSuccessScreen',{orderId: orderId})
   }
   console.log(`The status is : ${status}`);
   return (

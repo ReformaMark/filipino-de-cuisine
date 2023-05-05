@@ -17,12 +17,15 @@ const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type
           <>
             <View style={[styles.container, {borderColor: error ? 'red' : '#dea02c'}]}>
               
+              <TouchableOpacity style={{position: 'absolute', top: 10,left: 215, zIndex: 2}}>
               <Icon 
                 type={type}
                 name={iconName}
                 color={colors.darkBrown}
                 size={28}     
+                
               />
+              </TouchableOpacity>
               <TextInput
                 value={value}
                 onChangeText={onChange}
@@ -45,15 +48,16 @@ const CustomInput = ({control, name, placeholder,rules={}, secureTextEntry, type
 const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
-      backgroundColor: 'rgba(245, 245, 245, 1)',
+      backgroundColor: 'white',
       width: '100%',
-      borderRadius: 10,
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-      marginVertical: 5,
     },
     input: {
-     width: '100%',
+      width: '100%',
+      borderColor: colors.darkBrown,
+      borderWidth: 1,
+      padding: 10,
+      borderRadius: 10,
+      backgroundColor: 'white'
     }
   })
 

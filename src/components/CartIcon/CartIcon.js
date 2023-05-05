@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthentication } from '../../hooks/useAuthentication';
 import axios from 'axios';
+import Cart from './images/cartIcon.png';
+import { Touchable } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 export default function CartIcon() {
   const { user } = useAuthentication();
   const navigation = useNavigation();
-  const [orderItem, setOrderItem] = useState([]);
+  const [basketItem, setBasketItem] = useState([]);
   const [cartItemsCount, setCartItemsCount] = useState(0);
   const [cartUpdated, setCartUpdated] = useState(false);
   const userUid = user;
@@ -20,8 +23,8 @@ export default function CartIcon() {
   useEffect(() => {
     const fetchOrderItem = async () => {
       try {
-        const response = await axios.get('http://192.168.100.18:3000/api/orderItem');
-        setOrderItem(response.data);
+        const response = await axios.get('http://192.168.100.18:3000/api/basketItem');
+        setBasketItem(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -39,24 +42,21 @@ export default function CartIcon() {
   }, [navigation]);
 
   useEffect(() => {
-    const filteredOrderItems = orderItem.filter((item) => item.userId === userId && item.orderId == null).length;
+    const filteredOrderItems = basketItem.filter((item) => item.customerId === userId ).length;
     setCartItemsCount(filteredOrderItems);
-  }, [orderItem]);
+  }, [basketItem]);
 
   return (
     <View style={styles.container}>
       {user != undefined ?
       <>
-      <Icon
-        name='shopping-cart'
-        type='font-awesome'
-        color='#342006'
-        size={35}
-        onPress={() => {
-          // navigate to cart screen
-          navigation.navigate('Cart')
-        }}
+      <TouchableOpacity onPress={()=>navigation.navigate('Cart')}>
+      <Image
+        source={Cart}
+        style={{width: 40, height: 40}}
+        
       />
+      </TouchableOpacity>
       {cartItemsCount > 0 && (
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{cartItemsCount}</Text>
@@ -64,16 +64,13 @@ export default function CartIcon() {
       )}
     </> :
     <>
-      <Icon
-      name='shopping-cart'
-      type='font-awesome'
-      color='#342006'
-      size={35}
-      onPress={() => {
-        // navigate to cart screen
-        navigation.navigate('MainAuthTab')
-      }}
-    />
+       <TouchableOpacity onPress={()=>navigation.navigate('MainAuthTab')}>
+      <Image
+        source={Cart}
+        style={{width: 40, height: 40}}
+        
+      />
+      </TouchableOpacity>
     {cartItemsCount > 0 && (
       <View style={styles.badge}>
         <Text style={styles.badgeText}>{cartItemsCount}</Text>
