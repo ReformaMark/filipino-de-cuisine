@@ -67,7 +67,7 @@ const PaymentStatusScreen = ({navigation, route}) => {
     }, 5000); // delay for 50 seconds
   
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [loading]);
 
   useEffect(()=>{
     const CheckUserId = async() =>{
@@ -136,8 +136,8 @@ const PaymentStatusScreen = ({navigation, route}) => {
         <View style={styles.container}>
           <Text style={styles.resultText}>Failed to complete your payment.</Text>
           <CustomButton 
-            text='Go Back'
-            onPress={()=>navigation.navigate('CheckoutScreen')}
+            text='Refresh'
+            onPress={()=>setGetStatus(!getStatus)}
           />
         </View>
       ) : status === 'succeeded' ? (
@@ -173,13 +173,19 @@ const PaymentStatusScreen = ({navigation, route}) => {
         </View>
       ) :
       <View>
-        <Text>Some unknown Error Occured.</Text>
-        <View>
-          <CustomButton 
-              text="Okay"
-              onPress={()=> navigation.navigate('CheckoutScreen')}      
-          />   
-        </View>                  
+         <View style={styles.container}>
+        <Text style={styles.resultText}>Failed to finish payment or the payment session has expired.</Text>
+        <View style={{marginBottom: 20}}>
+        <CustomButton 
+            text="Okay"
+            onPress={()=> navigation.navigate('CheckoutScreen')}      
+        />
+        </View>
+        <CustomButton 
+            text="Return to Home"
+            onPress={()=> navigation.navigate('MainTab')}      
+        />
+        </View>
       </View>
       }
         

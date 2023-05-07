@@ -16,6 +16,7 @@ import PreparingIcon from './images/preparing1.png';
 import Dinner from './images/dinner.png';
 import IconLogo from './images/logo.png';
 import Logo from '../../components/Logo'
+import { getAuth } from 'firebase/auth'
 
 const OrderTransactionScreen = ({navigation}) => {
     const [user, setUser] = useState();
@@ -29,6 +30,7 @@ const OrderTransactionScreen = ({navigation}) => {
     const [delivered, setDelivered] = useState(false);
     const [cancelled, setCancelled] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState('');
+    const auth = getAuth();
 
     useEffect(()=>{
         getUser()
@@ -54,25 +56,17 @@ const OrderTransactionScreen = ({navigation}) => {
 
     useEffect
     const getUser = ()=>{
-        try {
-            AsyncStorage.getItem('User')
-            .then(value => {
-            if(value != null){
-                const userParse = JSON.parse(value)
-                setUser(userParse)
-                axios.get(`http://192.168.100.18:3000/api/orders/${userParse.uid}`)
-                .then(response =>{
-                setOrders(response.data)
-                }).catch(error=>{
-                    console.log(error)
-                })
-            }
-        }).catch(error =>{
+   
+       
+        axios.get(`http://192.168.100.18:3000/api/orders/${auth.currentUser.uid}`)
+        .then(response =>{
+        setOrders(response.data)
+        }).catch(error=>{
             console.log(error)
         })
-        } catch (error) {
-            console.log(error)
-        }
+
+    
+    
     }
 
     const handleAllBtnPressed = (selectedStatus)=>{
@@ -154,15 +148,15 @@ const OrderTransactionScreen = ({navigation}) => {
                 <Avatar
                     size={65}
                     rounded
-                    title={user.displayName.charAt(0)}
+                    title={auth.currentUser.displayName.charAt(0)}
                     containerStyle={{ backgroundColor: '#3d4db7' }}
                 />
                 </View>
-                {user ? 
+                {auth.currentUser ? 
                 <View >        
-                    <Text style={styles.displayName}>{user.displayName}</Text>
+                    <Text style={styles.displayName}>{auth.currentUser.displayName}</Text>
                     <View style={styles.emailContainer}>
-                    <Text style={styles.email}>{user.email}</Text>
+                    <Text style={styles.email}>{auth.currentUser.email}</Text>
                     <Icon 
                         name='pencil'
                         type='font-awesome'

@@ -101,6 +101,7 @@ const handleCancelBtn = async()=>{
     console.log(error)
   })
 }
+
   return (
     <View style={{paddingHorizontal: 10, backgroundColor:'white'}}>
       {loading ? (
@@ -169,7 +170,7 @@ const handleCancelBtn = async()=>{
         <>
         <View style={{justifyContent: 'space-between', flexDirection:'row'}}>
         <Text style={{fontSize: 10, fontWeight: '500', }}>15-20 Minutes Arrival</Text>
-        <TouchableOpacity onPress={()=>navigation.navigate('RecieptScreen',{order: order})}>
+        <TouchableOpacity onPress={()=>navigation.navigate('RecieptScreen',{order: order, deliveryFeesTotal: deliveryFeesTotal})}>
             <Text style={{color:'#10B981'}}>View Reciept</Text>
           </TouchableOpacity>
         </View>

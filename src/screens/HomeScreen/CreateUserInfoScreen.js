@@ -8,8 +8,9 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ActivityIndicator } from 'react-native'
 import { Dimensions } from 'react-native'
-
+import { getAuth } from 'firebase/auth';
 const CreateUserInfoScreen = ({navigation}) => {
+    const auth = getAuth();
     const {control, handleSubmit, formState: {errors}} = useForm();
     const [date, setDate] = useState(new Date());
     const [dateOfBirth, setDateOfBirth] = useState('');
@@ -20,33 +21,14 @@ const CreateUserInfoScreen = ({navigation}) => {
     const [isRendered, setIsRendered] = useState(true);
     const [customer, setCustomer] = useState();
    
-    const getData = () =>{
-        
-        try {
-            AsyncStorage.getItem('User')
-            .then(value => {
-            if(value != null){
-                const userParse = JSON.parse(value)
-                setUser(userParse)
-            }
-        }).catch(error =>{
-            console.log(error)
-        })
-        } catch (error) {
-            console.log(error)
-        }
-        
-    }
-    useEffect(()=>{
-        getData()
-    },[isRendered])
- 
+   
+
+   
     useEffect(()=>{
     
         const CheckUserId = async() =>{
            
-            if(user != undefined){
-            await axios.get(`http://192.168.100.18:3000/api/customerInfo/${user.uid}`)
+            await axios.get(`http://192.168.100.18:3000/api/customerInfo/${auth.currentUser.uid}`)
             .then((res)=>{
                 console.log(res.data)
                 setCustomer(res.data)
@@ -58,12 +40,9 @@ const CreateUserInfoScreen = ({navigation}) => {
                 console.log(error);
                 navigation.navigate('CreateUserInfoScreen');
             })
-            } else {
-                getData()
-            }
         }
         CheckUserId();
-    },[user])
+    },[])
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {

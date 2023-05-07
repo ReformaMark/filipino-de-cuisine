@@ -1,11 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 import { ScrollView } from 'react-native';
 import { Divider } from '@rneui/base';
 
 const RecieptScreen = ({navigation, route}) => {
-    const {order}= route.params;
-    console.log(order)
+    const {order ,deliveryFeesTotal}= route.params;
+   
+    const calculateTotalPrice = (order) => {
+      let totalPrice = 0;
+      order?.orderItems?.forEach((item) => {
+        totalPrice += item.menuItem.price * item.quantity;
+      });
+      return totalPrice;
+    };
   return (
     <ScrollView style={{backgroundColor: 'white', padding: 10}}>
         <View style={{backgroundColor: 'rgba(217, 217, 230, 1)', paddingVertical: 50, paddingHorizontal: 10}}>
@@ -41,6 +48,38 @@ const RecieptScreen = ({navigation, route}) => {
                         <Text style={styles.Total}>Total</Text>
                     </View>
                     <Divider style={styles.divider} color='black'/>
+                    <ScrollView style={{height: 120}}>
+                    {order?.orderItems?.map((item)=>(
+                      
+                        <View key={item.id} style={{flexDirection:'row', alignItems:'center'}}>
+                          <View>
+                            <Image source={{uri:item.menuItem.imgUrl}} style={{width: 40, height: 40, borderRadius: 200}}/>
+                          </View>
+                          <Text style={{marginLeft:10 ,width: 100,fontSize: 12, fontWeight:'600' }}>{item.menuItem.name}</Text>
+                          <Text style={{width: 40,fontSize: 12, fontWeight:'600' }}>₱ {item.menuItem.price}</Text>
+                          <Text style={{width: 60,fontSize: 12, fontWeight:'600', textAlign: 'center' }}>{item.quantity}</Text>
+                          <Text style={{fontSize: 13, fontWeight:'400' }}>₱ {(item.menuItem.price * item.quantity)}</Text>
+                        </View>
+                      ))}
+
+                    </ScrollView>
+                    <Divider style={styles.divider} color='black'/>
+                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                      <Text>Amount Due</Text>
+                      <Text>₱ {calculateTotalPrice(order)}</Text>
+                    </View>
+                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                      <Text>Vat(12%)</Text>
+                      <Text>₱ {calculateTotalPrice(order)}</Text>
+                    </View>
+                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                      <Text>Delivery Fee</Text>
+                      <Text>₱ {deliveryFeesTotal}</Text>
+                    </View>
+                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                      <Text>Total</Text>
+                      <Text>₱ {deliveryFeesTotal + calculateTotalPrice(order) }</Text>
+                    </View>
                 </View>
             </View>
             

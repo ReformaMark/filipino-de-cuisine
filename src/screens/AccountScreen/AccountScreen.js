@@ -15,20 +15,47 @@ import OrderHistoryIcon from './images/orderHistory.png';
 import reservationHistoryIcon from './images/reservationHistory.png';
 import { ScrollView } from 'react-native';
 import { color } from '@rneui/base';
-
+import { useForm } from 'react-hook-form'
+import CustomInput from '../../components/CustomInput/CustomInput';
+import axios from 'axios';
 
 export default function ProfileScreen({ navigation }) {
   const [visible, setVisible] = useState(false);
-  const { user } = useAuthentication();
+  const [visible1, setVisible1] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [address, setAddress] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
   const auth = getAuth(app)
+  const {control, handleSubmit,setValue,reset, watch} = useForm();
 
+  useEffect(()=>{
+ 
+    const getCustomerInfo = async()=>{
+
+      await axios.get(`http://192.168.100.18:3000/api/customerInfo/${auth.currentUser?.uid}`)
+      .then((response)=>{
+        setPhoneNumber(response.data.defaultContactNumber)
+        setAddress(response.data.defaultAddress)
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+    }
+    getCustomerInfo()
+  },[])
+
+  
   const toggleDialog = () => {
     setVisible(!visible);
   };
+  const toggleDialog1 = () => {
+    setVisible1(!visible1);
+    setValue("phoneNumber", phoneNumber)
+    setValue("address", address)
+  };
   
   const handleSignOut = () => {
-    if (user) {
+    if (auth.currentUser) {
       deleteData()
       signOut(auth)
       .then(() => {
@@ -40,6 +67,9 @@ export default function ProfileScreen({ navigation }) {
     }
   };
   
+  const handleEdit = ()=>{
+
+  }
 
   const deleteData = async() =>{
     try {
@@ -51,7 +81,7 @@ export default function ProfileScreen({ navigation }) {
   }
   return (
   <ScrollView style={styles.container}>
-    {user != undefined ?
+    {auth.currentUser != undefined ?
     <>
     <View style={styles.header}>
       <Image 
@@ -72,21 +102,59 @@ export default function ProfileScreen({ navigation }) {
       <Avatar
         size={65}
         rounded
-        title={user.displayName.charAt(0)}
+        title={auth.currentUser.displayName.charAt(0)}
         containerStyle={{ backgroundColor: '#3d4db7' }}
       />
       </View>
-      {user ? 
+      {auth.currentUser ? 
       <View >        
-        <Text style={styles.displayName}>{user.displayName}</Text>
+        <Text style={styles.displayName}>{auth.currentUser.displayName}</Text>
         <View style={styles.emailContainer}>
-          <Text style={styles.email}>{user.email}</Text>
+          <Text style={styles.email}>{auth.currentUser.email}</Text>
+          <TouchableOpacity onPress={toggleDialog1}>
           <Icon 
             name='pencil'
             type='font-awesome'
             size={10}
           />
+          </TouchableOpacity>
         </View>
+        <Dialog
+          isVisible={visible1}
+          onBackdropPress={toggleDialog1}
+          style={{borderColor: 'black', borderWidth: 2, borderRadius: 100, padding: 30}}
+        >
+        <View style={{padding: 10}}>
+        <Dialog.Title title="Edit information" />
+          <View style={{marginVertical: 10}}>
+            <Text style={styles.label}>Contact Nnumber</Text>
+            <CustomInput 
+                name='phoneNumber'
+                control={control}     
+                placeholder="Phone number"
+                keyboardType='numeric'
+                rules={{
+                    required: "Phone number is required", 
+                    minLength: {value: 11, message: "Please enter a valid phone number."}
+                }}            
+            />
+          </View>
+          <View style={{marginVertical: 10}}>
+            <Text style={styles.label}>Address</Text>
+            <CustomInput 
+                name="address"          
+                placeholder="Address" 
+                control={control}
+                rules={{
+                required: "Address is required"
+                }}
+            />
+          </View>
+          <TouchableOpacity onPress={handleSignOut} style={{padding: 10, backgroundColor: '#10B981',marginVertical: 20,borderRadius: 30}}>
+            <Text style={{textAlign:'center', fontSize: 15, fontWeight: '500', color: 'white'}}>Save</Text>
+          </TouchableOpacity>
+        </View>
+        </Dialog>
       </View>
       : <Text>Loading...</Text>}
     </View>

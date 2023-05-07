@@ -5,7 +5,7 @@ import { Icon } from '@rneui/themed'
 import { androidRipple } from '@rneui/base'
 import { useState } from 'react'
 
-const CustomButton = ({onPress, text, type="PRIMARY", bgColor, fgColor, size, name, iconType, color}) => {
+const CustomButton = ({onPress, text, type="PRIMARY", bgColor, fgColor, size, name, iconType, color, disabled}) => {
     const [isPressed, setIsPressed] = useState(false);
 
     const handlePressIn = () => setIsPressed(true);
@@ -17,6 +17,7 @@ const CustomButton = ({onPress, text, type="PRIMARY", bgColor, fgColor, size, na
         onPress={onPress} 
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
+        disabled={disabled}
         style={(pressed) => [
             styles.container, 
             styles[`container_${type}`],

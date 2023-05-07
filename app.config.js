@@ -8,6 +8,7 @@ export default {
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
+    "owner": "mark1701",
     "splash": {
       "image": "./assets/logo.png",
       "resizeMode": "contain",
@@ -26,6 +27,7 @@ export default {
       },
       "package": "com.immarkreforma.filipinodecuisine",
     },
+    "plugins": ["@react-native-google-signin/google-signin"],
     "web": {
       "favicon": "./assets/favicon.png"
     },
@@ -37,7 +39,11 @@ export default {
       firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.FIREBASE_APP_ID,
       firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID,
-     
+      "eas": {
+        "projectId": "8fc3e6b5-5c88-4dbd-a136-6c38b45ac51b",
+        "owner": "mark1701"
+      },
+      
     }
   }
 }

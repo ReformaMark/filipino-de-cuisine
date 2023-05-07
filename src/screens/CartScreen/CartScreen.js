@@ -173,18 +173,7 @@ console.log(subTotal)
           <Text style={styles.summary}>Order Summary</Text>
           <Text style={styles.subtotal}>SubTotal: ₱ {subTotal} </Text>
           <Text style={styles.delFee}>Delivery Fee: ₱ 49</Text>
-          <View style={styles.voucherContainer}>
-            <View style={styles.inputVoucherContainer}>
-            <CustomInput 
-              name='code'
-              control={control}
-              placeholder="Enter voucher code" 
-            />
-            </View>
-            <TouchableOpacity style={styles.apply}>
-              <Text style={{color: 'white'}}>APPLY</Text>
-            </TouchableOpacity>            
-          </View>
+          
           <Text style={styles.totalPrice}>Total Price: ₱ {totalPrice}</Text>
         </View>
    
@@ -345,14 +334,14 @@ const styles = StyleSheet.create({
 
   },
   totalPrice: {
-
+    marginTop: 40,
+    borderTopColor: 'black',
+    borderTopWidth: 1,
+    backgroundColor: "gray",
   },
   checkoutBtnContainer:{
     width: "100%",
-    
     padding: 15,
-   
-    
   },
   checkoutBtn:{
     flexDirection: 'row',
