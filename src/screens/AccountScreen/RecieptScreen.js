@@ -13,9 +13,16 @@ const RecieptScreen = ({navigation, route}) => {
       });
       return totalPrice;
     };
+    const calculateVAT = (order) => {
+    let VAT = 0;
+    order?.orderItems?.forEach((item) => {
+      VAT += item.menuItem.price * item.quantity * 0.12;
+    });
+    return VAT.toFixed(2);
+  }
   return (
     <ScrollView style={{backgroundColor: 'white', padding: 10}}>
-        <View style={{backgroundColor: 'rgba(217, 217, 230, 1)', paddingVertical: 50, paddingHorizontal: 10}}>
+        <View style={{backgroundColor: 'rgba(217, 217, 230, 1)', paddingVertical: 30, paddingHorizontal: 10}}>
             <View style={{backgroundColor: 'white', padding: 10, paddingVertical: 20}}>
                 <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
                     <Text style={{fontSize: 12, fontWeight:'700'}}>Billed To</Text>
@@ -38,8 +45,8 @@ const RecieptScreen = ({navigation, route}) => {
             </View>
 
             <View style={{backgroundColor: 'white', padding: 10, paddingVertical: 20, marginTop: 50}}>
-                <Text style={{fontSize: 20, fontWeight:'400', textAlign: 'center'}}>Thank You!</Text>
-                <Text style={{fontSize: 12, fontWeight:'400', textAlign: 'center'}}>your order was successsful, enjoy your meal!</Text>
+                <Text style={{fontSize: 20, fontWeight:'400', textAlign: 'center', marginVertical: 10}}>Thank You!</Text>
+                <Text style={{fontSize: 12, fontWeight:'400', textAlign: 'center', marginBottom: 30}}>your order was successsful, enjoy your meal!</Text>
                 <View style={{}}>
                     <View style={styles.itemLabel}>
                         <Text style={styles.Product}>Product</Text>
@@ -65,20 +72,21 @@ const RecieptScreen = ({navigation, route}) => {
                     </ScrollView>
                     <Divider style={styles.divider} color='black'/>
                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                      <Text>Amount Due</Text>
-                      <Text>₱ {calculateTotalPrice(order)}</Text>
+                      <Text style={{fontSize: 15, fontWeight: '600'}}>Amount Due</Text>
+                      <Text style={{fontSize: 15, fontWeight: '600'}}>₱ {calculateTotalPrice(order) - calculateVAT(order)}</Text>
                     </View>
                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                       <Text>Vat(12%)</Text>
-                      <Text>₱ {calculateTotalPrice(order)}</Text>
+                      <Text>₱ {calculateVAT(order)}</Text>
                     </View>
                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                       <Text>Delivery Fee</Text>
                       <Text>₱ {deliveryFeesTotal}</Text>
                     </View>
-                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                      <Text>Total</Text>
-                      <Text>₱ {deliveryFeesTotal + calculateTotalPrice(order) }</Text>
+                    <Divider />
+                    <View style={{flexDirection:'row', justifyContent:'space-between', marginTop: 20}}>
+                      <Text style={{fontSize: 17, fontWeight: '700'}}>Total</Text>
+                      <Text  style={{fontSize: 17, fontWeight: '700'}}>₱ {deliveryFeesTotal + calculateTotalPrice(order) }</Text>
                     </View>
                 </View>
             </View>
@@ -117,6 +125,6 @@ const styles = StyleSheet.create({
       Total:{
         marginLeft: 20,
         fontSize: 12,
-        fontWeight: '600'
+        fontWeight: '700'
       },
 })

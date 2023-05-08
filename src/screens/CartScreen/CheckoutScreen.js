@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 import { useForm} from 'react-hook-form'
 import Breakfast from '../MenuScreen/images/breakfast.png';
 import axios from 'axios';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { colors } from '../../global/styles';
 import { CheckBox, Dialog } from '@rneui/themed';
@@ -13,11 +13,12 @@ import * as Linking from 'expo-linking';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator } from 'react-native';
 import CustomButton from '../../components/CustomButton/CustomButton';
+import { getAuth } from 'firebase/auth';
 
 const CheckoutScreen = ({ navigation }) => {
   const [basketItem, setBasketItem] = useState([]);
   const [quantity , setQuantity] = useState();
-  const {control, handleSubmit,setError,reset, watch} = useForm();
+  const {control, handleSubmit,setValue,reset, watch} = useForm();
   const [checkGCASH, setCheckGCASH] = useState(false);
   const [checkMaya, setCheckMaya] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -31,36 +32,37 @@ const CheckoutScreen = ({ navigation }) => {
   const [loading, setLoading ] = useState(true);
   const [isRendered, setIsRendered] = useState(true);
   const [orderItemsId, setorderItemsId] = useState([]);
-
-useEffect(()=>{
-  getData()
-},[isRendered])
-
+  const [message, setMessage] = useState('')
+  const auth = getAuth();
 useEffect(()=>{
   const CheckUserId = async() =>{
-    if(user != undefined){
-      const response = await axios.get(`http://192.168.100.18:3000/api/customerInfo/${user.uid}`)
+
+      const response = await axios.get(`http://192.168.100.18:3000/api/customerInfo/${auth.currentUser.uid}`)
       .then((res)=>{
-        console.log(res.data)
+  
+        setValue("name",auth.currentUser.displayName)
+        setValue("address",res.data.defaultAddress)
+        setValue("phoneNumber",res.data.defaultContactNumber)
         setCustomer(res.data)
-        setCustomerInfoToState()
+       
       }).catch((error)=>{
           console.log(error);
         
       })
-    } else {
-        getData()
-    }
   }
   CheckUserId();
-},[user])
+ 
+},[])
 
+useEffect(()=>{
+  const setCustomerInfoToState = ()=>{
+    setDisplayName(auth.currentUser.displayName)
+    setContact(customer?.defaultContactNumber)
+    setAddress(customer?.defaultAddress)
+  }
+  setCustomerInfoToState()
+},[customer])
 
-const setCustomerInfoToState = ()=>{
-  setDisplayName(user.displayName)
-  setContact(customer.defaultContactNumber)
-  setAddress(customer.defaultAddress)
-}
 
 
 useEffect(() => {
@@ -80,22 +82,6 @@ const timeoutId = setTimeout(() => {
 return () => clearTimeout(timeoutId);
 }, []);
 
-const getData = () =>{
-  try {
-      AsyncStorage.getItem('User')
-      .then(value => {
-      if(value != null){
-          const userParse = JSON.parse(value)
-          setUser(userParse)
-      }
-  }).catch(error =>{
-      console.log(error)
-  })
-  } catch (error) {
-      console.log(error)
-  }
-  
-}
   // fetch the cartItems of the Current User
   useEffect(() => {
     const fetchOrderItem = async () => {
@@ -110,10 +96,10 @@ const getData = () =>{
     fetchOrderItem();
   }, [quantity]);
 
-  const filteredOrderItems = basketItem.filter((item) => item.customerId === user.uid );
+  const filteredOrderItems = basketItem.filter((item) => item.customerId === auth.currentUser.uid );
   const subTotal = filteredOrderItems.reduce((total, item) => total + parseFloat(item.menuItem.price * item.quantity), 0);
 
-  const deliveryFee = 49;
+  const deliveryFee = 80;
 
   const totalPrice = subTotal + deliveryFee;
 
@@ -139,12 +125,11 @@ const getData = () =>{
         'http://192.168.100.18:3000/api/payment_intents',
         { amount: totalPrice * 100}
       ).then((res)=>{
-        console.log(res.data)
         axios.post(
           'http://192.168.100.18:3000/api/payment_methods',
           { paymentMethod: paymentMethod}
         ).then((res)=>{
-          console.log(res.data)
+        
           axios.post(
             'http://192.168.100.18:3000/api/attach_payment_method_intent')
             .then((res)=>{
@@ -171,7 +156,7 @@ const getData = () =>{
             Linking.openURL(res.data.attributes.next_action.redirect.url)
             navigation.reset({
               index: 0,
-              routes: [{ name: 'PaymentStatusScreen', params: { displayName:displayName, contact:contact, address:address } }],
+              routes: [{ name: 'PaymentStatusScreen', params: { displayName:displayName, contact:contact, address:address, notes: message } }],
   
             });
           })
@@ -190,6 +175,10 @@ const getData = () =>{
     setContact(data.phoneNumber)
     setDisplayName(data.name)
     toggleDialog()
+  }
+
+  const onChange = (text)=>{
+    setMessage(text)
   }
   return (
     <>
@@ -284,25 +273,33 @@ const getData = () =>{
           ))}            
         </ScrollView>
       </View>
-      <View style={styles.summaryContainer}>
-        <Text style={styles.summary}>Order Summary</Text>
-        <Text style={styles.subtotal}>SubTotal: ₱ {subTotal} </Text>
-        <Text style={styles.delFee}>Delivery Fee: ₱ 49</Text>
-        <View style={styles.voucherContainer}>
-          <View style={styles.inputVoucherContainer}>
-          <CustomInput 
-            name='code'
-            control={control}
-            placeholder="Enter voucher code" 
-          />
-          </View>
-          <TouchableOpacity style={styles.apply}>
-            <Text style={{color: 'white'}}>APPLY</Text>
-          </TouchableOpacity>            
-        </View>
-        <Text style={styles.totalPrice}>Total Price: ₱ {totalPrice}</Text>
-      </View>
       
+      <View style={styles.summaryContainer}>
+          <Text style={styles.summary}>Order Summary</Text>
+          <View style={styles.subtotal}>
+          <Text >SubTotal:</Text>
+          <Text>₱ {subTotal}</Text>
+          </View>
+          <View style={styles.delFee}>
+          <Text >Delivery Fee: </Text>
+          <Text style={styles.delFee}>₱ {deliveryFee}</Text>
+          </View>
+          <View style={{width:'100%'}}>
+            <Text>Additional notes</Text>
+            <TextInput
+                  style={{width:'100%', height:50 , paddingHorizontal: 10, backgroundColor: 'rgba(0,0,0,0.05)', borderRadius: 10}}
+                  onChangeText={onChange}
+                  placeholder='Message...'
+                  textAlignVertical='top'
+                  value={message}
+                  multiline={true}
+            />
+      </View>
+        </View>
+        <View style={styles.totalPrice}>
+        <Text >Total Price: </Text>
+        <Text >₱ {totalPrice}</Text>
+        </View>
       <View style={styles.paymentMethodContainer}>
           <Text style={{fontSize: 15, fontWeight: '500'}}>Payment Methods</Text>
           <CheckBox
@@ -486,13 +483,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   subtotal:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
 
   },
   delFee:{
-
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   totalPrice: {
-
+    width: '100%',
+    paddingVertical: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    backgroundColor: '#d9d9d9',
   },
   checkoutBtnContainer:{
     width: "100%",

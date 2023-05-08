@@ -6,13 +6,16 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { 
   GoogleAuthProvider, 
-  FacebookAuthProvider, 
+
   getAuth, 
   signInWithCredential, 
-  signInWithPopup } from 'firebase/auth';
+} from 'firebase/auth';
 import * as GoogleAuthSession from 'expo-auth-session';
 import { useIdTokenAuthRequest} from 'expo-auth-session/providers/google';
-import { googleLogInConfig } from './googleConfig';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['The useProxy option is deprecated and will be removed in a future release, for more information check https://expo.fyi/auth-proxy-migration.']);
+
 
 
 //https://github.com/expo/expo/issues/8185
@@ -23,14 +26,15 @@ const SocialSignButtons = () => {
   const [userInfo, setUserInfo] = useState(null);
   const auth = getAuth()
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: "600142616435-bhdjtdj2i2t8cpdosudnipa12k59bvf6.apps.googleusercontent.com",
-    expoClientId:'600142616435-s68l80bsam0q4oebbq103hdqplki9ijd.apps.googleusercontent.com'
+
+    androidClientId: "516283628717-chtp9vh9kdvggd13qmkjbinnp2ifmeu3.apps.googleusercontent.com",
+    expoClientId:'600142616435-s68l80bsam0q4oebbq103hdqplki9ijd.apps.googleusercontent.com',
+   
 
   });
 
  useEffect(() => {
     if (response?.type === "success") {
-      const { id_token } = response.params;
       console.log(response.authentication.accessToken)
       const credential = GoogleAuthProvider.credential(null, response.authentication.accessToken);
       signInWithCredential(auth, credential).then((userCredential) => {
@@ -39,6 +43,7 @@ const SocialSignButtons = () => {
       })
       .catch((error) => {
         console.log(error);
+        alert("Unable to signIn with google.")
       });
       setToken(response.authentication.accessToken);
       getUserInfo();
@@ -66,17 +71,6 @@ const SocialSignButtons = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Or</Text>
-      <CustomButton 
-        style={styles.socialButton}
-        iconType='fontAwesome'
-        color='#FFFFFF'
-        name='facebook'
-        text="Sign In with Facebook"
-        onPress={()=>{}}
-        bgColor="#3B5998"
-        fgColor="#FFFFFF"
-        type='SOCIAL'
-      />
        <CustomButton 
         style={styles.socialButton}
         iconType='ant-design'
@@ -91,7 +85,7 @@ const SocialSignButtons = () => {
         fgColor="#FFFFFF"
         type='SOCIAL'
       />
-      
+  
     </View>
   )
 }

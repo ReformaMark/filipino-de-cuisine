@@ -102,7 +102,7 @@ export default function ProfileScreen({ navigation }) {
       <Avatar
         size={65}
         rounded
-        title={auth.currentUser.displayName.charAt(0)}
+        title={auth.currentUser.displayName?.charAt(0)}
         containerStyle={{ backgroundColor: '#3d4db7' }}
       />
       </View>
@@ -175,7 +175,7 @@ export default function ProfileScreen({ navigation }) {
           resizeMode='contain'
           style={{width: 30, height:40, }}
         />
-        <TouchableOpacity style={ styles.orderTransaction}>
+        <TouchableOpacity onPress={()=>navigation.navigate("ReservationHistory")} style={ styles.orderTransaction}>
           <Text style={styles.transactionText}>Reservation History</Text>
         </TouchableOpacity>
       </View>

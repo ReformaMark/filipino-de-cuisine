@@ -13,13 +13,9 @@ export function useAuthentication() {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
       
-        if(user.emailVerified){
+       
           setUser(user);
-        } else {
-          alert("Please verify your email")
-          sendEmailVerification(user)
-          console.log("Email verification link has been sent")
-        }
+
       } else {
         // User is signed out
         setUser(undefined);

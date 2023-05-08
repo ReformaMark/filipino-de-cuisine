@@ -47,7 +47,7 @@ const CartScreen = ({ navigation }) => {
 
   const subTotal = filteredBasketItems.reduce((total, item) => total + parseFloat(item.menuItem.price * item.quantity), 0);
 console.log(subTotal)
-  const deliveryFee = 49;
+  const deliveryFee = 80;
   const totalPrice = subTotal + deliveryFee;
 
   async function handleAddBtn(itemId, currentQuantity) {
@@ -171,12 +171,21 @@ console.log(subTotal)
         </View>
         <View style={styles.summaryContainer}>
           <Text style={styles.summary}>Order Summary</Text>
-          <Text style={styles.subtotal}>SubTotal: ₱ {subTotal} </Text>
-          <Text style={styles.delFee}>Delivery Fee: ₱ 49</Text>
+          <View style={styles.subtotal}>
+          <Text >SubTotal:</Text>
+          <Text>₱ {subTotal}</Text>
+          </View>
+          <View style={styles.delFee}>
+          <Text >Delivery Fee: </Text>
+          <Text style={styles.delFee}>₱ {deliveryFee}</Text>
+          </View>
           
-          <Text style={styles.totalPrice}>Total Price: ₱ {totalPrice}</Text>
         </View>
-   
+        <View style={styles.totalPrice}>
+        <Text >Total Price: </Text>
+        <Text >₱ {totalPrice}</Text>
+        </View>
+       
           <TouchableOpacity style={styles.checkoutBtn} onPress={()=> navigation.navigate('CheckoutScreen')}>
             <Text style={{color:'white'}}>Check Out</Text>
             <Icon 
@@ -328,16 +337,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   subtotal:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
 
   },
   delFee:{
-
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   totalPrice: {
-    marginTop: 40,
-    borderTopColor: 'black',
-    borderTopWidth: 1,
-    backgroundColor: "gray",
+    width: '100%',
+    paddingVertical: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    backgroundColor: '#d9d9d9',
   },
   checkoutBtnContainer:{
     width: "100%",

@@ -28,8 +28,12 @@ import EditCustomerInfoScreen from '../screens/CartScreen/EditCustomerInfoScreen
 import RecieptScreen from '../screens/AccountScreen/RecieptScreen';
 import TableScreen from '../screens/ReservationScreen/TableScreen';
 import ReservationConfirmationScreen from '../screens/ReservationScreen/ReservationConfirmationScreen';
-import ReservationStatus from '../screens/ReservationScreen/ReservationStatus';
+
 import ReservationGreetings from '../screens/ReservationScreen/ReservationGreetings';
+
+import ReservationHistory from '../screens/AccountScreen/ReservationHistory';
+import ReservationStatus from '../screens/ReservationScreen/ReservationStatus';
+import ReservationSucccess from '../screens/ReservationScreen/ReservationSuccess';
 
 
   const Stack = createStackNavigator();
@@ -246,6 +250,13 @@ import ReservationGreetings from '../screens/ReservationScreen/ReservationGreeti
               headerShown: false,
             }} 
           />
+           <Stack.Screen 
+            name="ReservationStatus" 
+            component={ReservationStatus}
+            options={{ 
+              headerShown: false,
+            }} 
+          />
           <Stack.Screen 
           name="AboutUs" 
           component={AboutUsScreen}
@@ -298,6 +309,15 @@ import ReservationGreetings from '../screens/ReservationScreen/ReservationGreeti
             headerTintColor: 'white'
           }}
           />
+         <Stack.Screen 
+          name="ReservationHistory" 
+          component={ReservationHistory}
+          options={{ 
+            headerTitle: 'Reservation History',
+            headerTitleAlign: 'center',
+            
+          }}
+          />
           <Stack.Screen name="TableScreen" component={TableScreen}
         options={{
           headerShown: true,
@@ -312,11 +332,11 @@ import ReservationGreetings from '../screens/ReservationScreen/ReservationGreeti
           title: 'Reserve Your Table',
         }}
         />
-        <Stack.Screen name="ReservationStatus" component={ReservationStatus}
+        <Stack.Screen name="ReservationSuccess" component={ReservationSucccess}
         options={{
           headerShown: false,
           headerTitleAlign: 'center',
-          title: 'Reserve Your Table',
+        
         }}
         />
         <Stack.Screen name="ReservationGreetings" component={ReservationGreetings}

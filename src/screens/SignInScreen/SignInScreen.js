@@ -35,14 +35,7 @@ const SignInScreen = ({navigation}) => {
           console.log(error)
         }
         setLoading(false) 
-        if (!user.emailVerified) {
-          navigation.navigate('EmailVerify')
-          console.log('User is not verified');
-        } else {
-          // User is verified, proceed to the app
-          navigation.navigate('Maintab');
-          console.log('User is verified');
-        }
+        navigation.navigate('Maintab');
       }
     } catch (error) {
       if (error.code === 'auth/user-not-found') {  

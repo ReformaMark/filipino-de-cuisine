@@ -8,7 +8,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ActivityIndicator } from 'react-native'
 import { Dimensions } from 'react-native'
-import { getAuth } from 'firebase/auth';
+import { getAuth, updateProfile} from 'firebase/auth';
 const CreateUserInfoScreen = ({navigation}) => {
     const auth = getAuth();
     const {control, handleSubmit, formState: {errors}} = useForm();
@@ -92,13 +92,17 @@ const CreateUserInfoScreen = ({navigation}) => {
         try {
             if(dateOfBirth != ''){
                 const response = await axios.post('http://192.168.100.18:3000/api/customerinfo', {
-                    id: user.uid,
+                    id: auth.currentUser.uid,
                     dateOfBirth: `${dateOfBirth}T00:00:00.00Z`,
                     defaultContactNumber: data.phoneNumber,
                     defaultAddress: data.address,
                   })
                   .then((res) =>{
                     console.log(res.data);
+                    updateProfile(auth.currentUser, {
+                        displayName: data.name,
+                        phoneNumber: data.phoneNumber,
+                      })
                     navigation.reset({
                         index: 0,
                         routes: [{ name: 'MainTab' }],

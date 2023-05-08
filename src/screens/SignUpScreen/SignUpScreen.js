@@ -36,6 +36,7 @@ const SignUpScreen = ({navigation}) => {
           displayName: data.username,
           phoneNumber: data.phoneNumber,
         })
+        signInWithEmailAndPassword( auth ,data.email, data.password)
         reset();
         console.log("Email verification link has been sent")
        

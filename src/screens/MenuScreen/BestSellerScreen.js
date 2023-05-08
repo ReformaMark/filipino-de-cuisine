@@ -67,14 +67,7 @@ const BestSellerScreen = ({navigation, route}) => {
     <ScrollView style={{backgroundColor:'rgba(245, 245, 245, 1)'}}>
     <View>
         <View style={{paddingVertical: 20, paddingHorizontal: 30}}>
-            <View style={{}}>
-            <CustomInput 
-                name="search"          
-                placeholder="Search foods" 
-                iconName='search'
-                control={control}
-            />          
-            </View>
+            
         </View>
         <View style={{paddingHorizontal: 120,}}>
             <View style={styles.selectedCategory}>

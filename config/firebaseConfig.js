@@ -4,14 +4,13 @@ import Constants from 'expo-constants';
 
 // Initialize Firebase
 const firebaseConfig = {
-    apiKey: Constants.manifest?.extra?.firebaseApiKey,
-    authDomain: Constants.manifest?.extra?.firebaseAuthDomain,
-    projectId: Constants.manifest?.extra?.firebaseProjectId,
-    storageBucket: Constants.manifest?.extra?.firebaseStorageBucket,
-    messagingSenderId: Constants.manifest?.extra?.firebaseMessagingSenderId,
-    appId: Constants.manifest?.extra?.firebaseAppId,
-    measurementId: Constants.manifest?.extra?.firebaseMeasurementId,
-  };
+  apiKey: "AIzaSyDUTaqBIhLJ6VLzaD8qz3gAJ3cKmid98zE",
+  authDomain: "filipinodecuisine.firebaseapp.com",
+  projectId: "filipinodecuisine",
+  storageBucket: "filipinodecuisine.appspot.com",
+  messagingSenderId: "516283628717",
+  appId: "1:516283628717:web:4608dcaa9395dbaf80da24"
+};
 
 const app = initializeApp(firebaseConfig);
 

@@ -35,14 +35,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor:'white'}} >  
       <View style={styles.searchAndIconContainer}>
-        <View style={[styles.searchContainer , {width: width * 0.7}]}>
-          <CustomInput 
-            name="search"          
-            placeholder="Search foods" 
-            iconName='search'
-            control={control}
-          />          
-        </View>
+       
         <CartIcon/>
         
       </View>
@@ -110,10 +103,11 @@ const styles = StyleSheet.create({
   
   searchAndIconContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    
+    justifyContent: "flex-end",
     marginTop: 50,
     marginBottom: 20,
+    marginRight: 20,
   },
   greetings:{
     fontSize: 15,

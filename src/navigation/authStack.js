@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SignInScreen from '../screens/SignInScreen/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen/SignUpScreen';
-import EmailVerificationScreen from '../screens/SignUpScreen/EmailVerificationScreen';
 import ForgotPasswordScreen from '../screens/SignInScreen/ForgotPasswordScreen';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import MenuScreen from '../screens/MenuScreen/MenuScreen';
@@ -158,15 +157,6 @@ import CartIcon from '../components/CartIcon/CartIcon';
             name="MainAuthTab" 
             component={MainAuthTabNavigator}
             options={{ headerShown: false}} 
-          />
-          <Stack.Screen
-            name='EmailVerify'
-            component={EmailVerificationScreen}
-            options={{ 
-              headerTitleAlign: 'center',
-              headerTitle: 'Verify Your Email'
-            }}
-          
           />
           <Stack.Screen
             name='ForgotPassword'

@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, TextInput, View, RefreshControl, ActivityI
 import React, { useState } from 'react'
 import CustomInput from '../../components/CustomInput/CustomInput'
 import axios from 'axios';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { CheckBox } from '@rneui/themed';
 import { TouchableOpacity } from 'react-native';
@@ -53,6 +53,7 @@ const ReservationScreen = ({navigation, route}) => {
     if(Platform.OS === 'android'){
         toggleDatePicker();
         setReservationDate(formatDate(currentDate));
+        setError(false)
     }
     } else {
         toggleDatePicker();
@@ -92,9 +93,15 @@ const ReservationScreen = ({navigation, route}) => {
       setIsLoading(false)
     }, 1000)
   };
-
+console.log(date)
   const handleProceed = (data)=>{
-    navigation.navigate('TableScreen', {data: data, date: reservationDate, paymentMethod: paymentMethod})
+    if(paymentMethod === ''){
+      setError(true)
+    } if(reservationDate === ''){
+      setPaymentMethodError(true)
+    }else{
+      navigation.navigate('TableScreen', {data: data, date: reservationDate, paymentMethod: paymentMethod})
+    }
   }
   return (
     <ScrollView 
@@ -113,9 +120,11 @@ const ReservationScreen = ({navigation, route}) => {
           <CustomInput 
             name="name"          
             placeholder="name" 
+            editable={false}
             control={control}
             rules={{
             required: "Name is required"
+            
             }}
           />
         </View>
@@ -194,7 +203,7 @@ const ReservationScreen = ({navigation, route}) => {
                 
               </> 
             }
-            <Text style={{fontSize: 11, fontWeight: '400'}}>To reserve your spot kindly note that 500 pesos fee is required.</Text>
+            <Text style={{fontSize: 11, fontWeight: '400'}}>To reserve your spot kindly note that 150 pesos fee is required.</Text>
           </View>
           <TouchableOpacity style={{padding: 10, backgroundColor: "#10B981", marginHorizontal: 20, borderRadius: 20, marginVertical: 20}} onPress={handleSubmit(handleProceed)}>
             <Text style={{color:'white', textAlign: 'center'}}>Proceed</Text>
@@ -217,4 +226,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
 },
+errorMsg:{
+  color:'red',
+}
 })

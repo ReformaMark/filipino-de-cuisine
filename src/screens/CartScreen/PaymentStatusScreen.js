@@ -5,8 +5,9 @@ import axios from 'axios';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { CheckBox, Icon } from '@rneui/themed';
 import * as Linking from 'expo-linking';
+import { getAuth } from 'firebase/auth';
 const PaymentStatusScreen = ({navigation, route}) => {
-  const {displayName, contact, address} = route.params;
+  const {displayName, contact, address, notes} = route.params;
   const [loading, setLoading ] = useState(true);
   const [getStatus, setGetStatus ] = useState(false);
   const [isGettingData, setIsGettingData ] = useState(false);
@@ -16,7 +17,7 @@ const PaymentStatusScreen = ({navigation, route}) => {
   const [ succeeded , setSucceeded] = useState(false);
   const [isRendered, setIsRendered] = useState(true);
   const [orderId, setOrderId] = useState(0);
-
+const auth=getAuth();
 
 
   useEffect(()=>{
@@ -72,7 +73,7 @@ const PaymentStatusScreen = ({navigation, route}) => {
   useEffect(()=>{
     const CheckUserId = async() =>{
       if(user != undefined){
-        const response = await axios.get(`http://192.168.100.18:3000/api/customerInfo/${user.uid}`)
+        const response = await axios.get(`http://192.168.100.18:3000/api/customerInfo/${auth.currentUser.uid}`)
         .then((res)=>{
           setCustomer(res.data)
         }).catch((error)=>{
@@ -97,15 +98,16 @@ const PaymentStatusScreen = ({navigation, route}) => {
             axios.post('http://192.168.100.18:3000/api/order', 
             {
               customerName: displayName, 
-              customerId: customer.id, 
+              customerId: customer?.id, 
               address: address,
               contactNumber: contact,
-              deliveryFee: "49.00",
-              customerId: user.uid,
+              deliveryFee: "80.00",
+              customerId: auth.currentUser.uid,
+              additionalNotes: notes,
               paymentIntentId: paymentIntentId
             }).then(result => {
-              console.log(result.data.id)
-              setOrderId(result.data.id)
+           
+              setOrderId(result.data?.id)
             }).catch(error=>{
               console.log(error)
             })
@@ -113,7 +115,7 @@ const PaymentStatusScreen = ({navigation, route}) => {
           setStatus(paymentStatus)
         })
         .catch(error=>{
-          console.log(`Error from get payment intent status function: ${error}`)
+          console.log(`Error from get payment intent status: ${error}`)
         })
     }
     getPaymentIntentStatus()
@@ -139,6 +141,13 @@ const PaymentStatusScreen = ({navigation, route}) => {
             text='Refresh'
             onPress={()=>setGetStatus(!getStatus)}
           />
+          <View style={{marginTop: 20}}>
+          
+          <CustomButton 
+              text="Go back"
+              onPress={()=> navigation.navigate('MainTab')}      
+          />
+          </View>
         </View>
       ) : status === 'succeeded' ? (
         <View style={styles.container}>
@@ -180,6 +189,7 @@ const PaymentStatusScreen = ({navigation, route}) => {
             text="Okay"
             onPress={()=> navigation.navigate('CheckoutScreen')}      
         />
+        
         </View>
         <CustomButton 
             text="Return to Home"
