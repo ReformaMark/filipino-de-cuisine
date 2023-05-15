@@ -174,7 +174,7 @@ const OrderTransactionScreen = ({navigation}) => {
                 
             />
             <View style={{flexDirection: 'row', width: '100%', backgroundColor: 'white', justifyContent:'space-evenly'}}>
-                <TouchableOpacity style={{alignItems:'center'}} onPress={handlePendingBtnPressed}>
+                <TouchableOpacity style={{alignItems:'center'}} onPress={()=>handlePendingBtnPressed('Pending')}>
                     <Image 
                     source={PendingIcon}
                     resizeMode='contain'
@@ -182,7 +182,7 @@ const OrderTransactionScreen = ({navigation}) => {
                     />
                      <Text style={{fontSize: 10, fontWeight: '400'}}>Pending</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{alignItems:'center'}} onPress={handlePreparingBtnPressed}>
+                <TouchableOpacity style={{alignItems:'center'}} onPress={()=>handlePreparingBtnPressed('Preparing')}>
                     <Image 
                     source={PreparingIcon}
                     resizeMode='contain'
@@ -190,7 +190,7 @@ const OrderTransactionScreen = ({navigation}) => {
                     />
                      <Text style={{fontSize: 10, fontWeight: '400'}}>Preparing</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{alignItems:'center'}} onPress={handleOutForDeliveryBtnPressed}>
+                <TouchableOpacity style={{alignItems:'center'}} onPress={()=>handleOutForDeliveryBtnPressed('OutForDelivery')}>
                     <Image 
                     source={OnTheWayIcon}
                     resizeMode='contain'
@@ -198,7 +198,7 @@ const OrderTransactionScreen = ({navigation}) => {
                     />
                      <Text style={{fontSize: 10, fontWeight: '400'}}>Out for Delivery</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{alignItems:'center'}} onPress={handleDeliveredBtnPressed}>
+                <TouchableOpacity style={{alignItems:'center'}} onPress={()=>handleDeliveredBtnPressed('Delivered')}>
                     <Image 
                     source={DeliveredIcon}
                     resizeMode='contain'
@@ -246,7 +246,7 @@ const OrderTransactionScreen = ({navigation}) => {
                     <Text style={styles.orderItem}>{item.createdAt.split("T")[0]}</Text>
                 </View>
                 <View style={{marginLeft: 10,width: 40,}}>
-                    <Text style={styles.orderItem}>₱ {item.orderItems.reduce((total, orderTtem) => total + parseFloat(orderTtem.price), 49)}</Text>
+                    <Text style={styles.orderItem}>₱ {item.orderItems.reduce((total, orderTtem) => total + parseFloat(orderTtem.price), 80)}</Text>
                 </View>
                 <View style={{marginLeft: 20, marginRight: 20, width: 80}}>
                     <Text style={styles.orderItem}>{item.onlineOrders[0].deliveryStatus}</Text>

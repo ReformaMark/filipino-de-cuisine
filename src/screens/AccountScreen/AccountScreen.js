@@ -135,7 +135,7 @@ export default function ProfileScreen({ navigation }) {
         <View style={{padding: 10}}>
         <Dialog.Title title="Edit information" />
           <View style={{marginVertical: 10}}>
-            <Text style={styles.label}>Contact Nnumber</Text>
+            <Text style={styles.label}>Contact Number</Text>
             <CustomInput 
                 name='phoneNumber'
                 control={control}     
@@ -143,7 +143,8 @@ export default function ProfileScreen({ navigation }) {
                 keyboardType='numeric'
                 rules={{
                     required: "Phone number is required", 
-                    minLength: {value: 11, message: "Please enter a valid phone number."}
+                    minLength: {value: 11, message: "Please enter a valid phone number."},
+                    maxLength: {value: 11, message: "Please enter a valid phone number."}
                 }}            
             />
           </View>

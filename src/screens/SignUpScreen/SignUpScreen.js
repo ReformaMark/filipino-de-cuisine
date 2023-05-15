@@ -7,7 +7,7 @@ import {
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignButtons from '../../components/SocialSignButtons'
-import { EMAIL_REGEX } from '../../components/Regex/Regex'
+import { EMAIL_REGEX, USERNAME_REGEX, PASSWORD_REGEX } from '../../components/Regex/Regex'
 import {useForm} from 'react-hook-form'
 import { 
   getAuth, 
@@ -81,7 +81,8 @@ const SignUpScreen = ({navigation}) => {
             placeholder="Password"
             rules={{
               required: "Password is required", 
-              minLength: {value: 8, message: "Password should be minimum of 6 characters long."}
+              minLength: {value: 8, message: "Password should be minimum of 8 characters long."},
+              pattern:{value:PASSWORD_REGEX , message: 'Password must contain at least 1 capital letters, number and special character with no spaces,'}
             }}
             />
           <Text>Confirm password</Text>
