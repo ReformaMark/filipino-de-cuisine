@@ -20,6 +20,10 @@ const RecieptScreen = ({navigation, route}) => {
     });
     return VAT.toFixed(2);
   }
+
+  const itemSubtotal = calculateTotalPrice(order) - calculateVAT(order);
+  const deliveryFee = (deliveryFeesTotal - deliveryFeesTotal * 0.12).toFixed(2)
+
   return (
     <ScrollView style={{backgroundColor: 'white', padding: 10}}>
         <View style={{backgroundColor: 'rgba(217, 217, 230, 1)', paddingVertical: 30, paddingHorizontal: 10}}>
@@ -55,7 +59,7 @@ const RecieptScreen = ({navigation, route}) => {
                         <Text style={styles.Total}>Total</Text>
                     </View>
                     <Divider style={styles.divider} color='black'/>
-                    <ScrollView style={{height: 120}}>
+                    <View>
                     {order?.orderItems?.map((item)=>(
                       
                         <View key={item.id} style={{flexDirection:'row', alignItems:'center'}}>
@@ -69,22 +73,26 @@ const RecieptScreen = ({navigation, route}) => {
                         </View>
                       ))}
 
-                    </ScrollView>
+                    </View>
                     <Divider style={styles.divider} color='black'/>
                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                      <Text style={{fontSize: 15, fontWeight: '600'}}>Amount Due</Text>
-                      <Text style={{fontSize: 15, fontWeight: '600'}}>₱ {calculateTotalPrice(order) - calculateVAT(order)}</Text>
+                      <Text style={{fontSize: 15, fontWeight: '400'}}>Item Subtotal</Text>
+                      <Text style={{fontSize: 15, fontWeight: '400'}}>₱ {itemSubtotal}</Text>
+                    </View>
+                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                      <Text style={{fontSize: 15, fontWeight: '400'}}>Delivery Fee</Text>
+                      <Text style={{fontSize: 15, fontWeight: '400'}}>₱ {deliveryFee}</Text>
+                    </View>
+                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                      <Text style={{fontSize: 15, fontWeight: '400'}}>Amount Due</Text>
+                      <Text style={{fontSize: 15, fontWeight: '400'}}>₱ {(parseFloat(itemSubtotal) + parseFloat(deliveryFee)).toFixed(2)}</Text>
                     </View>
                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                       <Text>Vat(12%)</Text>
-                      <Text>₱ {calculateVAT(order)}</Text>
+                      <Text>₱ {(parseFloat(calculateVAT(order)) + 9.6).toFixed(2)}</Text>
                     </View>
-                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                      <Text>Delivery Fee</Text>
-                      <Text>₱ {deliveryFeesTotal}</Text>
-                    </View>
-                    <Divider />
-                    <View style={{flexDirection:'row', justifyContent:'space-between', marginTop: 20}}>
+                    <Divider style={{marginVertical:10}}/>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', marginTop: 10}}>
                       <Text style={{fontSize: 17, fontWeight: '700'}}>Total</Text>
                       <Text  style={{fontSize: 17, fontWeight: '700'}}>₱ {deliveryFeesTotal + calculateTotalPrice(order) }</Text>
                     </View>

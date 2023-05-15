@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import { StyleSheet, Text, View,ScrollView, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { useForm } from 'react-hook-form'
 import { useAuthentication } from '../../hooks/useAuthentication';
@@ -11,9 +11,10 @@ import Foods from './images/Food.png'
 import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AirbnbRating } from '@rneui/themed';
+import axios from 'axios';
 
 export default function HomeScreen({ navigation }) {
-
+  const [mostOrderItem ,setMostOrderItem] = useState([]);
   const {width} = useWindowDimensions(); 
   const {control, handleSubmit,setError, formState: {errors}} = useForm();
 
@@ -32,6 +33,22 @@ export default function HomeScreen({ navigation }) {
       
     }
   } 
+
+  useEffect(()=>{
+    const getMostOrdered = async()=>{
+      await axios.get(`http://192.168.100.18:3000/api/most-ordered-item`)
+      .then((res)=>{
+     
+        setMostOrderItem(res.data)
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+    }
+    getMostOrdered()
+  },[])
+
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor:'white'}} >  
       <View style={styles.searchAndIconContainer}>
@@ -85,16 +102,19 @@ export default function HomeScreen({ navigation }) {
             <Text onPress={() => navigation.navigate('Reservation')} style={styles.bookReservation}>Book a Reservation</Text>
           </TouchableOpacity>
         </View>
-
-        <View style={styles.popularDish}>
+        {mostOrderItem && mostOrderItem.map((item)=>(
+          <View key={item.id} style={styles.popularDish}>
           <View style={styles.popularDishImage}>
-            <Image source={CrispyPata} style={styles.dish}/>
+            <Image source={{uri:item.imgUrl}} style={styles.dish}/>
           </View>
-          <Text style={styles.name}>Crispy Pata</Text>
-          <Text style={styles.price}>₱ 80.00</Text>
-          <Text style={styles.description}>Crispy pata is a pork-lover's delight—crunchy pork skin enclosing savory tender meat. Crispy pata is usually defined as deep-fried pork trotters or knuckles.</Text>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.price}>₱ {item.price}</Text>
+          <Text style={styles.description}>{item.description}</Text>
         </View>
+        ))
+        }
       </View>
+      
     </ScrollView>
   );
 }

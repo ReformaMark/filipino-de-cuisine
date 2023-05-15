@@ -18,12 +18,13 @@ const OrderStatusScreen = ({navigation, route}) => {
   const { id } = route.params;
   
   useEffect(() => {
-      setLoading(false);
+      
       const getOrderIdUsingRoute = async() =>{
         await axios.get(`http://192.168.100.18:3000/api/order/${id}`)
       .then(response =>{
         setOrder(response.data)
-       
+        setLoading(false);
+        console.log(response.data.onlineOrders[0].deliveryStatus)
         switch (response.data.onlineOrders[0].deliveryStatus) {
           case 'Pending':
             return setStatus(0);
@@ -31,7 +32,7 @@ const OrderStatusScreen = ({navigation, route}) => {
             return setStatus(1);
           case 'OutForDelivery':
             return setStatus(2);
-          case 'Delivered':
+          case 'Received':
             return setStatus(3);
           default:
             return null;
@@ -45,7 +46,7 @@ const OrderStatusScreen = ({navigation, route}) => {
       getOrderIdUsingRoute()
   },[navigation]);
 
-  
+  console.log(status)
  
   // define icons for each step
 const customIcons = [
@@ -101,6 +102,25 @@ const handleCancelBtn = async()=>{
     console.log(error)
   })
 }
+
+const handleOrderRecieved = async()=>{
+  await axios.put(`http://192.168.100.18:3000/api/order/${id}/received`)
+  .then((response)=>{
+    console.log("order has recieved")
+    toast.show(`Order recieved!`, {
+      type: "success",
+      placement: "bottom",
+      duration: 2000,
+      offset: 100,
+      animationType: "slide-in"
+    });
+    navigation.pop();
+  })
+  .catch(error=>{
+    console.log(error)
+  })
+}
+
 
   return (
     <View style={{paddingHorizontal: 10, backgroundColor:'white'}}>
@@ -225,9 +245,26 @@ const handleCancelBtn = async()=>{
             <Text style={{marginEnd: 5, fontSize: 13, fontWeight: '400'}}>₱ {overallTotal}</Text>
           </View>
           <View style={{width:'100%', alignItems:'center', marginTop: 20, marginBottom: 20,}}>
-          <TouchableOpacity style={styles.canelBtn} onPress={handleCancelBtn}>
-            <Text style={{fontSize: 15, color: 'white'}}>Cancel Order</Text>
-          </TouchableOpacity>
+            {status === 0 ? (
+              <TouchableOpacity style={styles.canelBtn} onPress={handleCancelBtn}>
+                <Text style={{fontSize: 15, color: 'white'}}>Cancel Order</Text>
+              </TouchableOpacity>
+            ) : status === 1 ? (
+              <TouchableOpacity style={[styles.canelBtn, {backgroundColor:'gray'}]} disabled={status === 1}>
+                <Text style={{fontSize: 15, color: 'white'}}>Cancel Order</Text>
+              </TouchableOpacity>
+            ) : status === 2 ? (
+              <TouchableOpacity style={styles.canelBtn} onPress={handleOrderRecieved}>
+                <Text style={{fontSize: 15, color: 'white'}}>Order Recieved</Text>
+              </TouchableOpacity>
+            ) : status === 3 ? (
+              <>
+              </>
+            ) :
+            <>
+            </>
+            }
+         
           </View>
           
         </View>

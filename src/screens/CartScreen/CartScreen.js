@@ -48,7 +48,7 @@ const CartScreen = ({ navigation }) => {
   const subTotal = filteredBasketItems.reduce((total, item) => total + parseFloat(item.menuItem.price * item.quantity), 0);
 console.log(subTotal)
   const deliveryFee = 80;
-  const totalPrice = subTotal + deliveryFee;
+  const totalPrice = subTotal;
 
   async function handleAddBtn(itemId, currentQuantity) {
     const updatedQuantity = currentQuantity + 1;
@@ -169,18 +169,7 @@ console.log(subTotal)
             ))}            
           </ScrollView>
         </View>
-        <View style={styles.summaryContainer}>
-          <Text style={styles.summary}>Order Summary</Text>
-          <View style={styles.subtotal}>
-          <Text >SubTotal:</Text>
-          <Text>₱ {subTotal}</Text>
-          </View>
-          <View style={styles.delFee}>
-          <Text >Delivery Fee: </Text>
-          <Text style={styles.delFee}>₱ {deliveryFee}</Text>
-          </View>
-          
-        </View>
+       
         <View style={styles.totalPrice}>
         <Text >Total Price: </Text>
         <Text >₱ {totalPrice}</Text>
@@ -214,7 +203,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   orderItemContainer:{
-    height: Dimensions.get('screen').height * 0.43,
+    height: Dimensions.get('screen').height * 0.63,
   },
   container:{
     padding: 50,

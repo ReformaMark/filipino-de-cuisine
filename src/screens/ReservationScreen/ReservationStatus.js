@@ -7,10 +7,12 @@ import { useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { Divider } from '@rneui/themed';
 import CustomButton from '../../components/CustomButton/CustomButton';
+import { DateTime } from 'luxon';
 
 const ReservationStatus = ({navigation, route}) => {
     const {id} = route.params;
     const [reservation, setReservation] = useState();
+    const [reservationTable, setReservationTable] = useState();
     const auth = getAuth()
     console.log(id)
     const dateString = reservation?.selectedDate;
@@ -29,7 +31,17 @@ const ReservationStatus = ({navigation, route}) => {
         .catch(error=>{
             console.log(error)
         })
-    
+     
+    },[])
+    useEffect(()=>{
+        const getReservationTables = axios.get(`http://192.168.100.18:3000/api/reservationTable/${id}`)
+        .then(res=>{
+            setReservationTable(res.data)
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+
     },[])
   console.log(reservation)
   return (
@@ -49,16 +61,21 @@ const ReservationStatus = ({navigation, route}) => {
                     <Text style={{fontSize:15, fontWeight:'700', textAlign:'center'}}>{auth.currentUser.displayName}</Text>
                     <Text style={{fontSize:15, fontWeight:'700', textAlign:'center'}}>{formattedDate}</Text>
                     <Text style={{fontSize:15, fontWeight:'700', textAlign:'center'}}>
-                        {reservation.reservationSlots.map((slot, index) =>
-                            new Date(slot.startIsoDate).toLocaleTimeString('en-US', {
-                            hour: 'numeric',
-                            minute: 'numeric',
-                            hour12: true
-                            }) +
-                            (index === reservation.reservationSlots.length - 1 ? '' : ', ')
-                        ).join('').replace(/,\s([^,]+)$/, ' and $1')}
+                    {DateTime.fromISO(reservation.reservationSlots[0].startIsoDate).toLocaleString(DateTime.TIME_SIMPLE)} to{' '}
+                    {DateTime.fromISO(reservation.reservationSlots[reservation.reservationSlots.length - 1].endIsoDate).toLocaleString(DateTime.TIME_SIMPLE)}
                     </Text>
-                    <Text style={{fontSize:15, fontWeight:'700', color:'#EE2A24', textAlign:'center'}}>Table {reservation.reservationSlots.map((id)=> id.reservationTableId)}</Text>
+                    <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                        <Text style={{fontSize:15, fontWeight:'700', color:'#EE2A24', textAlign:'center'}}>Table </Text>
+                    {reservationTable?.map((item, index)=>{
+                        if (index === 0) {
+                        return <Text style={{fontSize:15, fontWeight:'700', color:'#EE2A24', textAlign:'center'}} key={item.id}>{item.table}</Text>;
+                        } else if (index === reservationTable.length - 1) {
+                        return <Text style={{fontSize:15, fontWeight:'700', color:'#EE2A24', textAlign:'center'}} key={item.id}> and {item.table}</Text>;
+                        } else {
+                        return <Text style={{fontSize:15, fontWeight:'700', color:'#EE2A24', textAlign:'center'}} key={item.id}>, {item.table}</Text>;
+                        }
+                    })}
+                    </View>
                 </View>
                 <Divider width={2}/>
                 <View style={{marginVertical: 10}}>
@@ -76,7 +93,7 @@ const ReservationStatus = ({navigation, route}) => {
                 <Text style={{fontSize:12, fontWeight:'600', color:'black', textAlign:'center'}}>Your reservation ID is {reservation.id}</Text>
                 </View>
             </View>
-            <View>
+            <View style={{marginTop: 20}}>
                 <CustomButton 
                     text="Go Back"
                     onPress={()=>navigation.navigate("MainTab")}

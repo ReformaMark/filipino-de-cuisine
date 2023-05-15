@@ -67,8 +67,16 @@ export default function ProfileScreen({ navigation }) {
     }
   };
   
-  const handleEdit = ()=>{
-
+  const handleEdit = async(data)=>{
+    await axios.put(`http://192.168.100.18:3000/api/customerInfo/${auth.currentUser?.uid}/account`, { defaultContactNumber: data.phoneNumber ,defaultAddress: data.address })
+    .then((res)=>{
+      setAddress(res.data.defaultAddress)
+      setPhoneNumber(res.data.defaultContactNumber)
+      setVisible1(!visible1)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   }
 
   const deleteData = async() =>{
@@ -150,7 +158,7 @@ export default function ProfileScreen({ navigation }) {
                 }}
             />
           </View>
-          <TouchableOpacity onPress={handleSignOut} style={{padding: 10, backgroundColor: '#10B981',marginVertical: 20,borderRadius: 30}}>
+          <TouchableOpacity onPress={handleSubmit(handleEdit)} style={{padding: 10, backgroundColor: '#10B981',marginVertical: 20,borderRadius: 30}}>
             <Text style={{textAlign:'center', fontSize: 15, fontWeight: '500', color: 'white'}}>Save</Text>
           </TouchableOpacity>
         </View>

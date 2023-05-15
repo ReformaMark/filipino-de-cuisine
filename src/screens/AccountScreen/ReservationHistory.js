@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native'
 import axios from 'axios'
 import { getAuth } from 'firebase/auth'
 import { Divider } from '@rneui/themed'
+import { DateTime } from 'luxon'
 
 const ReservationHistory = ({navigation, route}) => {
     const [isLoading, setIsLoading] = useState(true)
@@ -54,15 +55,9 @@ const ReservationHistory = ({navigation, route}) => {
                         <Text style={{marginLeft: 30,width: 60 ,fontSize:10, fontWeight: '400', color:'#78716C'}}>{item.id}</Text>
                         <Text style={{width: 60 ,fontSize:10, fontWeight: '400', color:'#78716C'}}>{item.selectedDate}</Text>
                         <View style={{width: 80 }}>
-                        <Text style={{width: 60 ,fontSize:10, fontWeight: '400', color:'#78716C', textAlign: 'center'}}>
-                        {item.reservationSlots.map((slot, index) =>
-                            new Date(slot.startIsoDate).toLocaleTimeString('en-US', {
-                            hour: 'numeric',
-                            minute: 'numeric',
-                            hour12: true
-                            }) +
-                            (index === item.reservationSlots.length - 1 ? '' : ', ')
-                        ).join('').replace(/,\s([^,]+)$/, ' and $1')}
+                        <Text style={{marginLeft: 10,width: 60 ,fontSize:10, fontWeight: '400', color:'#78716C', textAlign:'center'}}>
+                            {DateTime.fromISO(item.reservationSlots[0].startIsoDate).toLocaleString(DateTime.TIME_SIMPLE)} to{' '}
+                            {DateTime.fromISO(item.reservationSlots[item.reservationSlots.length - 1].endIsoDate).toLocaleString(DateTime.TIME_SIMPLE)}
                         </Text>
                         </View>
                         <Text style={{
